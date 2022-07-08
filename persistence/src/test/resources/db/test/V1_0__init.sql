@@ -1,0 +1,32 @@
+CREATE TABLE `TRAFFICRECORDER`
+(
+    `EXTERNALID` varchar(255),
+    `CITYDIRECTION` varchar(255),
+    `NEIGHBOR` varchar(255),
+    `SPECIALTY` varchar(255),
+    `LOCATION` varchar(255),
+    `LATITUDE` decimal(19,2),
+    `LONGITUDE` decimal(19,2),
+    `ID` bigint NOT NULL AUTO_INCREMENT,
+    PRIMARY KEY (`ID`)
+);
+
+CREATE TABLE `TRAFFICRECORD`
+(
+    `RECORDDATE` varchar(255),
+    `WEEKDAY` integer,
+    `WEEKEND` varchar(255),
+    `HOLIDAY` varchar(255),
+    `VACATIONLOWERSAXONY` varchar(255),
+    `PLANTHOLIDAY` varchar(255),
+    `CARCOUNT` integer,
+    `TRAFFICRECORDER_ID` bigint,
+    `ID` bigint NOT NULL AUTO_INCREMENT,
+    PRIMARY KEY (`ID`)
+);
+
+ALTER TABLE `TRAFFICRECORD`
+    ADD CONSTRAINT `FK_TRAFFICRECORD_TRAFFICRECORDER`
+    FOREIGN KEY (`TRAFFICRECORDER_ID`) 
+    REFERENCES `TRAFFICRECORDER` (`ID`);
+
