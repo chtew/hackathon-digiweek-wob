@@ -32,8 +32,7 @@
     "build": "react-scripts build --loglevel=error",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "stop": "taskkill -F -IM node.exe",
-    "server": "node devserver.js"
+    "stop": "taskkill -lF -IM node.exe"
   },
   "eslintConfig": {
     "extends": "react-app"
