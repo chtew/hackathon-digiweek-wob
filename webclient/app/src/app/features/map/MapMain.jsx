@@ -1,37 +1,49 @@
 import React, {useEffect, useMemo, useState} from "react";
-import {AppBar, Button, CircularProgress, Dialog, IconButton, Slide, Toolbar, Typography} from "@mui/material";
+import {
+    AppBar,
+    Button,
+    CircularProgress,
+    Container,
+    Dialog,
+    IconButton,
+    Slide,
+    Stack,
+    TextField,
+    Toolbar,
+    Typography
+} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {CircleMarker, MapContainer, TileLayer} from "react-leaflet";
 import "./MapMain.css";
 import "leaflet/dist/leaflet.css";
 import TrafficRecorderRest from "../../services/TrafficRecorderRest";
+import axios from "axios";
+import trafficRecorderRest from "../../services/TrafficRecorderRest";
+import Dropzone from "react-dropzone";
+import {t} from "i18next";
+import TrafficRecordRest from "../../services/TrafficRecordRest";
 import {Close} from "@mui/icons-material";
-import {TransitionProps} from '@mui/material/transitions';
-
-
-const Transition = React.forwardRef(function Transition(
-    props: TransitionProps & {
-        children: React.ReactElement;
-    },
-    ref: React.Ref<unknown>,
-) {
-    return <Slide direction="up" ref={ref} {...props} />;
-});
 
 function MapMain() {
-    const trafficrecorderRest = useMemo(() => new TrafficRecorderRest(), []);
+    const trafficRecorderRest = useMemo(() => new TrafficRecorderRest(), []);
     const [trafficRecorderAll, setTrafficRecorderAll] = useState();
     const [center, setCenter] = useState([52.427183696557591, 10.776275400214885]);
     const [dialogEntity, setDialogEntity] = useState(null);
     const [loadedImage, setLoadedImage] = useState(false);
+    const [spanStart, setSpanStart] = useState("2020-05-01");
+    const [spanEnd, setSpanEnd] = useState("2020-06-01");
     const {t} = useTranslation();
 
     useEffect(() => {
         reload();
     }, []);
 
+    useEffect(() => {
+        setLoadedImage(false);
+    },[spanStart, spanEnd])
+
     function reload() {
-        trafficrecorderRest.findAll().then(response => {
+        trafficRecorderRest.findAll().then(response => {
             setTrafficRecorderAll(response.data);
             if (!!response.data && !!response.data[0].latitude && !!response.data[0].longitude) {
                 setCenter([response.data[0].latitude, response.data[0].longitude]);
@@ -52,7 +64,7 @@ function MapMain() {
 
     function renderLoadedImage() {
         let content = [<img key={"image"}
-                            src={"http://localhost:3001/render/d-solo/RY0Euae7z/miv-pro-rekorder?orgId=1&from=1588284000000&to=1590962399000&theme=light&panelId=3&width=1000&height=500&tz=Europe%2FBerlin&var-externalId=" + dialogEntity?.externalId}
+                            src={"http://localhost:3001/render/d-solo/RY0Euae7z/miv-pro-rekorder?orgId=1&from=" + moment(spanStart).unix()*1000 + "&to=" + moment(spanEnd).unix()*1000  + "&theme=light&panelId=3&width=1000&height=500&tz=Europe%2FBerlin&var-externalId=" + dialogEntity?.externalId}
                             onLoad={() => setLoadedImage(true)}/>];
 
         if (!loadedImage) {
@@ -65,7 +77,7 @@ function MapMain() {
         return (
             <Dialog
                 fullScreen
-                open={dialogEntity}
+                open={Boolean(dialogEntity)}
                 onClose={handleClose}
                 TransitionComponent={Transition}
             >
@@ -84,7 +96,39 @@ function MapMain() {
                         </Typography>
                     </Toolbar>
                 </AppBar>
-                {renderLoadedImage()}
+                <Container>
+                    <Stack direction={"row"} spacing={2}>
+                        <TextField
+                            id="start"
+                            label="Start"
+                            type="date"
+                            value={spanStart}
+                            sx={{width: 220}}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            onChange={(evnt) => {
+                                setSpanStart(evnt.target.value)
+                            }}
+                        />
+                        <TextField
+                            id="end"
+                            label="Ende"
+                            type="date"
+                            value={spanEnd}
+                            sx={{width: 220}}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            onChange={(evnt) => {
+                                setSpanEnd(evnt.target.value)
+                            }}
+
+                        />
+                    </Stack>
+
+                    {renderLoadedImage()}
+                </Container>
             </Dialog>
         )
     }
@@ -121,8 +165,77 @@ function MapMain() {
 }
 
 function UploadCsv() {
+    // POST localhost:8081/hackathon/api/trafficrecorder/trafficRecordersJSON
+    // POST localhost:8081/hackathon/api/trafficrecord/inductionLoopCsv
+
+
+/*
+    values
+        .then((response) => {
+            callback(response);
+        })
+        .catch(error => {
+            errorResponse(error);
+    });
+*/
+    const trafficRecordRest = useMemo(() => new TrafficRecordRest(), []);
+
     return (
-        <Button href="#text-buttons">IMPORT CSV</Button>
+        <>
+            <Dropzone
+                onDrop={accepted => {
+                    console.log(accepted);
+                    trafficRecordRest.uploadCsv(accepted).then(console.log);
+                }}
+            >
+                {({getRootProps, getInputProps}) => (
+                    <section>
+                        <div {...getRootProps()}>
+                            <input {...getInputProps()} />
+                            <p>{t("dropCsv.text")}</p>
+                        </div>
+                    </section>
+                )}
+            </Dropzone>
+        </>
+    );
+}
+
+function UploadJSON() {
+    // POST localhost:8081/hackathon/api/trafficrecorder/trafficRecordersJSON
+    // POST localhost:8081/hackathon/api/trafficrecord/inductionLoopCsv
+    const trafficrecorderRest = useMemo(() => new TrafficRecorderRest(), []);
+
+
+/*
+    values
+        .then((response) => {
+            callback(response);
+        })
+        .catch(error => {
+            errorResponse(error);
+        });*/
+
+    return (
+        <>
+            <Dropzone
+                accept="application/json"
+                onDrop={accepted => {
+                    trafficrecorderRest.uploadJSON(accepted).then(r => console.log(r));
+                }}
+                maxSize={200000}
+                multiple={false}
+            >
+                {({getRootProps, getInputProps}) => (
+                    <section>
+                        <div {...getRootProps()}>
+                            <input {...getInputProps()} />
+                            <p>{t("dropJSON.text")}</p>
+                        </div>
+                    </section>
+                )}
+            </Dropzone>
+        </>
     );
 }
 
@@ -134,10 +247,17 @@ function CreateMap() {
             <Typography variant={"h2"} gutterBottom>
                 {t("cityMap.title")}
             </Typography>
+            <UploadJSON/>
             <UploadCsv/>
             <MapMain/>
         </>
     );
+
+    function uploadCsv() {
+        return (
+            <Button href="#text-buttons">IMPORT CSV</Button>
+        );
+    }
 }
 
 export default CreateMap;

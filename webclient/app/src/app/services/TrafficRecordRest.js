@@ -13,5 +13,14 @@ class TrafficRecordRest extends CrudRest {
             return axios.get(this.baseUrl + "/find-without-other-trafficRecorder/" + selected);
         }
     }
+
+    uploadCsv(values) {
+        let fd = new FormData();
+        const config = { headers: { 'Content-Type': 'multipart/form-data' } };
+
+        fd.append('file',values[0]);
+
+        return axios.post(this.baseUrl+'/inductionLoopCsv', fd, config);
+    }
 }
 export default TrafficRecordRest;

@@ -1,5 +1,7 @@
 /* eslint-disable max-len */
 const translationEnEN = {
+    "dropJSON.text": "Click here to upload JSON",
+    "dropCsv.text": "Click here to upload Csv",
     "cityMap.title": "Mobility Map",
     "cityMap.uploadCsv": "Upload CSV",
     "cityDirection.in": "in",
