@@ -38,7 +38,7 @@ class TrafficRecorderServiceTest {
     }   
 
     private static String loadFile(String resourceName) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(TrafficRecordServiceTest.class.getClassLoader().getResourceAsStream(resourceName)));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(TrafficRecorderServiceTest.class.getClassLoader().getResourceAsStream(resourceName)));
         
         StringBuilder stringBuilder = new StringBuilder();
         int lastChar = -1;
