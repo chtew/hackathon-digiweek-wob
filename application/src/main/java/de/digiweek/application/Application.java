@@ -25,6 +25,8 @@ public class Application {
         SimpleFilterProvider filterProvider = new SimpleFilterProvider();
         filterProvider.addFilter("filterId", SimpleBeanPropertyFilter.filterOutAllExcept("id"));
         filterProvider.addFilter("filterIdName", SimpleBeanPropertyFilter.filterOutAllExcept("id", "name", "title"));
+        filterProvider.addFilter("filterIdDayCount",
+                SimpleBeanPropertyFilter.filterOutAllExcept("id", "carCount", "recordDate"));
         mapper.setFilterProvider(filterProvider);
         return mapper;
     }
