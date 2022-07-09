@@ -6,6 +6,8 @@ import {useTranslation} from "react-i18next";
 import AppConfig from "./AppConfig";
 import Navigation from "./commons/navigation/Navigation";
 import logo from "./assets/images/logo-white.png";
+import {AdapterMoment} from '@mui/x-date-pickers/AdapterMoment';
+import {LocalizationProvider} from "@mui/x-date-pickers";
 
 
 function App() {
@@ -15,10 +17,12 @@ function App() {
     return (
         <React.Fragment>
             <ErrorHandler>
-                <Navigation menuItems={appItems} title={t("app.baseName")} logo={logo}>
-                    <CssBaseline/>
-                    <MainContentRouter/>
-                </Navigation>
+                <LocalizationProvider dateAdapter={AdapterMoment}>
+                    <Navigation menuItems={appItems} title={t("app.baseName")} logo={logo}>
+                        <CssBaseline/>
+                        <MainContentRouter/>
+                    </Navigation>
+                </LocalizationProvider>
             </ErrorHandler>
         </React.Fragment>
     );
