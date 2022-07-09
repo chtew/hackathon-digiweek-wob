@@ -10,6 +10,7 @@ function MapMain() {
     const trafficrecorderRest = useMemo(() => new TrafficRecorderRest(), []);
     const [trafficRecorderAll, setTrafficRecorderAll] = useState();
     const [center, setCenter] = useState([52.427183696557591, 10.776275400214885]);
+    const {t} = useTranslation();
 
     useEffect(() => {
         reload();
@@ -52,7 +53,7 @@ function MapMain() {
 
 function UploadCsv() {
     return (
-        <Button href="#text-buttons">Link</Button>
+        <Button href="#text-buttons">IMPORT CSV</Button>
     );
 }
 
@@ -62,9 +63,8 @@ function CreateMap() {
     return (
         <Container>
             <Typography variant={"h2"} gutterBottom>
-                {t("ein titel")}
+                {t("cityMap.title")}
             </Typography>
-            {t("der inhalt")}
             <UploadCsv/>
 
             <MapMain/>
