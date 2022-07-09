@@ -15,9 +15,23 @@ services:
   grafana:
     image: grafana/grafana-oss:9.0.2
     ports:
-      - 3001:3000
+      - 3001:3001
     networks:
       - backend
+    volumes:
+      - grafana-data:/var/lib/grafana
+    environment:
+      GF_RENDERING_SERVER_URL: http://renderer:8081/render
+      GF_RENDERING_CALLBACK_URL: http://grafana:3001/
+      GF_LOG_FILTERS: rendering:debug
+      GF_SERVER_HTTP_PORT: 3001
+
+  renderer:
+    image: grafana/grafana-image-renderer:latest
+    networks:
+      - backend
+    ports:
+      - 3002:8081
   db:
     image: mariadb:latest
     restart: on-failure
@@ -60,7 +74,7 @@ services:
       retries: 30
     volumes:
       - keycloak-db-data:/var/lib/mysql
-    networks: 
+    networks:
       - backend
 
   keycloak:
@@ -74,7 +88,7 @@ services:
     restart: on-failure
     environment:
       KEYCLOAK_IMPORT: /opt/jboss/keycloak/imports/realm.json
-      DB_VENDOR: mariadb 
+      DB_VENDOR: mariadb
       DB_ADDR: db-keycloak
       DB_PORT: 3307
       DB_USER: 'keycloak'
@@ -84,13 +98,14 @@ services:
     ports:
       # <Port exposed> : < MySQL Port running inside container>
       - '8080:8080'
-    networks: 
+    networks:
       - backend
 
 # Names our volume
 volumes:
   hackathonv2-db-data:
   keycloak-db-data:
+  grafana-data:
 
  # Networks to be created to facilitate communication between containers
 networks:
