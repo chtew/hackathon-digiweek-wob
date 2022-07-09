@@ -1,25 +1,19 @@
 package de.digiweek.service.impl;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.is;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
 
 import de.digiweek.persistence.entity.TrafficRecorderEntity;
 import de.digiweek.persistence.repository.TrafficRecordRepository;
@@ -27,7 +21,8 @@ import de.digiweek.persistence.repository.TrafficRecorderRepository;
 
 @SpringBootTest()
 @Transactional
-@TestPropertySource(properties = {"spring.datasource.url=jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MYSQL"})
+@TestPropertySource(properties = {
+        "spring.datasource.url=jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MYSQL" })
 public class TrafficRecordServiceTest {
 
     @Autowired
@@ -44,17 +39,18 @@ public class TrafficRecordServiceTest {
         String fileContent = loadFile("inductionLoopTest.csv");
 
         TrafficRecorderEntity recorder = new TrafficRecorderEntity();
-        recorder.setExternalId("216_Z2C");
+        recorder.setExternalId("110_ABC");
         trafficRecorderRepository.saveAndFlush(recorder);
-        
+
         trafficRecordService.loadInductionLoopCsv(fileContent);
 
         assertThat(trafficRecordService.findAll(), contains(hasProperty("carCount", is(17))));
     }
 
     private static String loadFile(String resourceName) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(TrafficRecordServiceTest.class.getClassLoader().getResourceAsStream(resourceName)));
-        
+        BufferedReader reader = new BufferedReader(new InputStreamReader(
+                TrafficRecordServiceTest.class.getClassLoader().getResourceAsStream(resourceName)));
+
         StringBuilder stringBuilder = new StringBuilder();
         int lastChar = -1;
         do {
@@ -66,5 +62,5 @@ public class TrafficRecordServiceTest {
 
         return stringBuilder.toString();
     }
-    
+
 }
