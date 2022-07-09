@@ -41,7 +41,7 @@ public class TrafficRecorderEntity extends AbstractEntity<Long> {
     private BigDecimal longitude;
 
     // entity relations
-    @JsonFilter("filterId")
+    @JsonFilter("filterIdDayCount")
     @OneToMany(mappedBy = "trafficRecorder")
     private Set<TrafficRecordEntity> trafficRecord;
 

@@ -23,6 +23,19 @@ import Dropzone from "react-dropzone";
 import {t} from "i18next";
 import TrafficRecordRest from "../../services/TrafficRecordRest";
 import {Close} from "@mui/icons-material";
+import {TransitionProps} from '@mui/material/transitions';
+import moment from "moment";
+
+
+const Transition = React.forwardRef(function Transition(
+    props: TransitionProps & {
+        children: React.ReactElement;
+    },
+    ref: React.Ref<unknown>,
+) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
+
 
 function MapMain() {
     const trafficRecorderRest = useMemo(() => new TrafficRecorderRest(), []);
@@ -184,7 +197,6 @@ function UploadCsv() {
         <>
             <Dropzone
                 onDrop={accepted => {
-                    console.log(accepted);
                     trafficRecordRest.uploadCsv(accepted).then(console.log);
                 }}
             >
@@ -219,7 +231,7 @@ function UploadJSON() {
     return (
         <>
             <Dropzone
-                accept="application/json"
+                accept={{'application/json': ['.json']}}
                 onDrop={accepted => {
                     trafficrecorderRest.uploadJSON(accepted).then(r => console.log(r));
                 }}
