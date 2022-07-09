@@ -2,7 +2,7 @@ const appItems = [
     {title: "trafficRecorder.title", link: "/trafficrecorder/"},
     {title: ""},
     {title: "trafficRecord.title", link: "/trafficrecord/"},
-    {title: ""},
+    {title: " "},
     {title: "Map", link: "/map"}
 ];
 
