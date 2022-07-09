@@ -1,5 +1,11 @@
 version: "3.9"
 services:
+  grafana:
+    image: grafana/grafana-oss:9.0.2
+    ports:
+      - 3001:3000
+    networks:
+      - backend
   db:
     image: mariadb:latest
     restart: on-failure

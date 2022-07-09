@@ -13,12 +13,12 @@ CREATE TABLE `TRAFFICRECORDER`
 
 CREATE TABLE `TRAFFICRECORD`
 (
-    `RECORDDATE` varchar(255),
+    `RECORDDATE` datetime,
     `WEEKDAY` integer,
-    `WEEKEND` varchar(255),
-    `HOLIDAY` varchar(255),
-    `VACATIONLOWERSAXONY` varchar(255),
-    `PLANTHOLIDAY` varchar(255),
+    `WEEKEND` tinyint(1),
+    `HOLIDAY` tinyint(1),
+    `VACATIONLOWERSAXONY` tinyint(1),
+    `PLANTHOLIDAY` tinyint(1),
     `CARCOUNT` integer,
     `TRAFFICRECORDER_ID` bigint,
     `ID` bigint NOT NULL AUTO_INCREMENT,

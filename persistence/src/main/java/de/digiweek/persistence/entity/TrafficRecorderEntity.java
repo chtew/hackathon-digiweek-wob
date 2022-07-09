@@ -9,12 +9,10 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * TrafficRecorder Entity class
  */
-@XmlRootElement
 @Entity
 @Table(name = "TRAFFICRECORDER")
 public class TrafficRecorderEntity extends AbstractEntity<Long> {
