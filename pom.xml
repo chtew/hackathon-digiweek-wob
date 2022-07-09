@@ -190,6 +190,13 @@
             </dependency>
 
             <dependency>
+                <groupId>com.opencsv</groupId>
+                <artifactId>opencsv</artifactId>
+                <version>5.6</version>
+            </dependency>
+        
+
+            <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>application</artifactId>
                 <version>${project.version}</version>
