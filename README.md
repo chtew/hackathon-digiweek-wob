@@ -92,3 +92,7 @@ Start the database without keycloak:
 cd deployment
 docker-compose -f mysqllocal-docker-compose.yml up
 ```
+
+### How-to import data with curl
+`curl -F "file=@/home/florian/dev/hackathon/Datenlieferung/Geodaten/Zaehlschleifen_Standorte.json" localhost:8081/hackathon/api/trafficrecorder/trafficRecordersJSON`
+`curl -F "file=@/home/florian/dev/hackathon/Datenlieferung/Daten/Verkehrszaehlschleifen_Digiweek.csv" localhost:8081/hackathon/api/trafficrecord/inductionLoopCsv`
