@@ -1,6 +1,9 @@
 package de.digiweek.persistence.entity;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
+
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -16,24 +19,29 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "TRAFFICRECORD")
 public class TrafficRecordEntity extends AbstractEntity<Long> {
 
+    // date
     // entity fields
     @Column(name = "RECORDDATE")
-    private String recordDate;
+    private Date recordDate;
 
     @Column(name = "WEEKDAY")
     private Integer weekday;
 
+    // bool
     @Column(name = "WEEKEND")
-    private String weekend;
+    private Boolean weekend;
 
+    // bool
     @Column(name = "HOLIDAY")
-    private String holiday;
+    private Boolean holiday;
 
+    // bool
     @Column(name = "VACATIONLOWERSAXONY")
-    private String vacationLowerSaxony;
+    private Boolean vacationLowerSaxony;
 
+    // bool
     @Column(name = "PLANTHOLIDAY")
-    private String plantHoliday;
+    private Boolean plantHoliday;
 
     @Column(name = "CARCOUNT")
     private Integer carCount;
@@ -45,11 +53,11 @@ public class TrafficRecordEntity extends AbstractEntity<Long> {
     private TrafficRecorderEntity trafficRecorder;
 
     // entity fields getters and setters
-    public String getRecordDate() {
+    public Date getRecordDate() {
         return recordDate;
     }
 
-    public void setRecordDate(String recordDate) {
+    public void setRecordDate(Date recordDate) {
         this.recordDate = recordDate;
     }
 
@@ -61,35 +69,35 @@ public class TrafficRecordEntity extends AbstractEntity<Long> {
         this.weekday = weekday;
     }
 
-    public String getWeekend() {
+    public Boolean getWeekend() {
         return weekend;
     }
 
-    public void setWeekend(String weekend) {
+    public void setWeekend(Boolean weekend) {
         this.weekend = weekend;
     }
 
-    public String getHoliday() {
+    public Boolean getHoliday() {
         return holiday;
     }
 
-    public void setHoliday(String holiday) {
+    public void setHoliday(Boolean holiday) {
         this.holiday = holiday;
     }
 
-    public String getVacationLowerSaxony() {
+    public Boolean getVacationLowerSaxony() {
         return vacationLowerSaxony;
     }
 
-    public void setVacationLowerSaxony(String vacationLowerSaxony) {
+    public void setVacationLowerSaxony(Boolean vacationLowerSaxony) {
         this.vacationLowerSaxony = vacationLowerSaxony;
     }
 
-    public String getPlantHoliday() {
+    public Boolean getPlantHoliday() {
         return plantHoliday;
     }
 
-    public void setPlantHoliday(String plantHoliday) {
+    public void setPlantHoliday(Boolean plantHoliday) {
         this.plantHoliday = plantHoliday;
     }
 
