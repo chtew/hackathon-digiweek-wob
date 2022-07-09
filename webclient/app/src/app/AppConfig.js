@@ -1,9 +1,13 @@
-const appItems = [
-    {title: "trafficRecorder.title", link: "/trafficrecorder/"},
-    {title: ""},
-    {title: "trafficRecord.title", link: "/trafficrecord/"},
-    {title: " "},
-    {title: "Map", link: "/map"}
-];
+import React from "react";
 
-export {appItems};
+function AppConfig(props) {
+
+    const appItems = [
+        {title: "trafficRecorder.title", link: "/trafficrecorder/"},
+        {title: "trafficRecord.title", link: "/trafficrecord/"},
+        {title: "cityMap.title", link: "/map"}
+    ];
+    return {appItems}
+}
+
+export default AppConfig;

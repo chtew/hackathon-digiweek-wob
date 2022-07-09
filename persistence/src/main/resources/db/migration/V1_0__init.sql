@@ -5,8 +5,8 @@ CREATE TABLE `TRAFFICRECORDER`
     `NEIGHBOR` varchar(255),
     `SPECIALTY` varchar(255),
     `LOCATION` varchar(255),
-    `LATITUDE` decimal(19,2),
-    `LONGITUDE` decimal(19,2),
+    `LATITUDE` decimal(22,19),
+    `LONGITUDE` decimal(22,19),
     `ID` bigint NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (`ID`)
 );

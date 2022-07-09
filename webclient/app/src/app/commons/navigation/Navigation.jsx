@@ -5,7 +5,6 @@ import SidebarNavigation from "./sidebarNavigation/SidebarNavigation";
 function Navigation(props) {
     const {menuItems, switchLength, title, logo} = props;
 
-    if (menuItems.length > switchLength) {
         return (
             <>
                 <SidebarNavigation menuItems={menuItems} title={title} logo={logo}>
@@ -13,14 +12,6 @@ function Navigation(props) {
                 </SidebarNavigation>
             </>
         )
-    }
-
-    return (
-        <>
-            <AppHeader menuItems={menuItems} title={title} logo={logo}/>
-            {props.children}
-        </>
-    )
 
 }
 

@@ -1,5 +1,7 @@
 /* eslint-disable max-len */
 const translationEnEN = {
+    "cityMap.title": "Mobility Map",
+    "cityMap.uploadCsv": "Upload CSV",
     "cityDirection.in": "in",
     "cityDirection.out": "out",
     "trafficRecorder": "TrafficRecorder",
