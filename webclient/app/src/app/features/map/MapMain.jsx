@@ -22,6 +22,7 @@ import trafficRecorderRest from "../../services/TrafficRecorderRest";
 import Dropzone from "react-dropzone";
 import {t} from "i18next";
 import TrafficRecordRest from "../../services/TrafficRecordRest";
+import {Close} from "@mui/icons-material";
 
 function MapMain() {
     const trafficRecorderRest = useMemo(() => new TrafficRecorderRest(), []);
