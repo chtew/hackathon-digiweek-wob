@@ -7,24 +7,21 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.sound.sampled.LineListener;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.opencsv.CSVParser;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.exceptions.CsvException;
 
 import de.digiweek.persistence.entity.TrafficRecordEntity;
+import de.digiweek.persistence.entity.TrafficRecorderEntity;
 import de.digiweek.persistence.repository.TrafficRecordRepository;
 import de.digiweek.persistence.repository.TrafficRecorderRepository;
-import de.digiweek.service.csvdefinitions.InductionLoopRecord;
 
 
 /**
@@ -35,28 +32,30 @@ import de.digiweek.service.csvdefinitions.InductionLoopRecord;
 @Service
 public class TrafficRecordService implements ServiceInterface<TrafficRecordEntity, TrafficRecordRepository> {
 
+    private static Logger LOGGER = LoggerFactory.getLogger(TrafficRecordService.class);
+
     @Autowired
-    private TrafficRecordRepository trafficrecordRepository;
+    private TrafficRecordRepository trafficRecordRepository;
 
     @Autowired
     private TrafficRecorderRepository trafficRecorderRepository;
 
     @Override
     public TrafficRecordRepository getRepository() {
-        return trafficrecordRepository;
+        return trafficRecordRepository;
     }
 
     public List<TrafficRecordEntity> findAllWithoutTrafficRecorder() {
-        return trafficrecordRepository.findAllWithoutTrafficRecorder();
+        return trafficRecordRepository.findAllWithoutTrafficRecorder();
     }
 
     public List<TrafficRecordEntity> findAllWithoutOtherTrafficRecorder(Long id) {
-        return trafficrecordRepository.findAllWithoutOtherTrafficRecorder(id);
+        return trafficRecordRepository.findAllWithoutOtherTrafficRecorder(id);
     }
 
     public void loadInductionLoopCsv(String text) {
         StringReader reader = new StringReader(text);
-        CSVReader csvReader = new CSVReaderBuilder(reader).withSkipLines(1).build();
+        CSVReader csvReader = new CSVReaderBuilder(reader).withSkipLines(1).withKeepCarriageReturn(true).build();
 
         List<String[]> lines = new ArrayList<>();
         try {
@@ -76,15 +75,20 @@ public class TrafficRecordService implements ServiceInterface<TrafficRecordEntit
             entity.setHoliday(parseBoolean(lineElems[10]));
             entity.setPlantHoliday(parseBoolean(lineElems[12]));
             entity.setVacationLowerSaxony(parseBoolean(lineElems[11]));
-            entity.setWeekend(parseBoolean(lineElems[9]));            
+            entity.setWeekend(parseBoolean(lineElems[9]));
+
+            TrafficRecorderEntity recorderEntity = trafficRecorderRepository.findOneByExternalId(lineElems[2]);
+            if (recorderEntity != null) {
+                entity.setTrafficRecorder(recorderEntity);
+            } else {
+                LOGGER.warn("Could not find traffic recorder for id " + lineElems[2]);
+                continue;
+            }
+
+            parsedEntities.add(entity);
         }
 
-        // System.out.println(records);
-        try {
-            System.out.println(new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(parsedEntities.get(0)));
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+        trafficRecordRepository.saveAllAndFlush(parsedEntities);
     }
 
     private Date convertToDate(String value) {

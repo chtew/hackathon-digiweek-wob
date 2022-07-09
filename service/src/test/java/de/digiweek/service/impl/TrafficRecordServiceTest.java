@@ -15,6 +15,12 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+
+import de.digiweek.persistence.entity.TrafficRecorderEntity;
 import de.digiweek.persistence.repository.TrafficRecordRepository;
 import de.digiweek.persistence.repository.TrafficRecorderRepository;
 
@@ -36,9 +42,14 @@ public class TrafficRecordServiceTest {
     @Test
     public void testLoadInductionLoopCsv() throws IOException {
         String fileContent = loadFile("inductionLoopTest.csv");
+
+        TrafficRecorderEntity recorder = new TrafficRecorderEntity();
+        recorder.setExternalId("216_Z2C");
+        trafficRecorderRepository.saveAndFlush(recorder);
         
-        // System.out.println(fileContent);
         trafficRecordService.loadInductionLoopCsv(fileContent);
+
+        assertThat(trafficRecordService.findAll(), contains(hasProperty("carCount", is(17))));
     }
 
     private static String loadFile(String resourceName) throws IOException {
