@@ -6,14 +6,14 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
@@ -66,6 +66,9 @@ public class TrafficRecordService implements ServiceInterface<TrafficRecordEntit
             e1.printStackTrace();
         }
 
+        // This is for performance optimization
+        Map<String, TrafficRecorderEntity> recorderEntitiesById = loadAllRecordersAsMap();
+
         List<TrafficRecordEntity> parsedEntities = new ArrayList<>();
         for (String[] lineElems : lines) {
             TrafficRecordEntity entity = new TrafficRecordEntity();
@@ -77,7 +80,7 @@ public class TrafficRecordService implements ServiceInterface<TrafficRecordEntit
             entity.setVacationLowerSaxony(parseBoolean(lineElems[11]));
             entity.setWeekend(parseBoolean(lineElems[9]));
 
-            TrafficRecorderEntity recorderEntity = trafficRecorderRepository.findOneByExternalId(lineElems[2]);
+            TrafficRecorderEntity recorderEntity = recorderEntitiesById.get(lineElems[2]);
             if (recorderEntity != null) {
                 entity.setTrafficRecorder(recorderEntity);
             } else {
@@ -89,6 +92,11 @@ public class TrafficRecordService implements ServiceInterface<TrafficRecordEntit
         }
 
         trafficRecordRepository.saveAllAndFlush(parsedEntities);
+    }
+
+    private Map<String, TrafficRecorderEntity> loadAllRecordersAsMap() {
+        return trafficRecorderRepository.findAll().stream()
+            .collect(Collectors.toMap(TrafficRecorderEntity::getExternalId, t -> t));
     }
 
     private Date convertToDate(String value) {
