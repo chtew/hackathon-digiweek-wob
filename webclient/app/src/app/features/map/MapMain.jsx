@@ -1,5 +1,5 @@
 import React, {useState, useMemo, useEffect} from "react";
-import {Container, Typography} from "@mui/material";
+import {Button, Container, Typography} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {MapContainer, TileLayer, CircleMarker, Popup} from "react-leaflet";
 import "./MapMain.css";
@@ -47,6 +47,12 @@ function MapMain() {
     );
 }
 
+function UploadCsv() {
+    return (
+        <Button href="#text-buttons">Link</Button>
+    );
+}
+
 function CreateMap() {
     const {t} = useTranslation();
 
@@ -56,8 +62,9 @@ function CreateMap() {
                 {t("ein titel")}
             </Typography>
             {t("der inhalt")}
+            <UploadCsv/>
 
-            <MapMain />
+            <MapMain/>
 
         </Container>
     );
