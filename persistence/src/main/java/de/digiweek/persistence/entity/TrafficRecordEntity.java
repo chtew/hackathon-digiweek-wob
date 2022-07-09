@@ -9,12 +9,10 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * TrafficRecord Entity class
  */
-@XmlRootElement
 @Entity
 @Table(name = "TRAFFICRECORD")
 public class TrafficRecordEntity extends AbstractEntity<Long> {
