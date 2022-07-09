@@ -5,6 +5,11 @@ import {MapContainer, TileLayer, CircleMarker, Popup} from "react-leaflet";
 import "./MapMain.css";
 import "leaflet/dist/leaflet.css";
 import TrafficRecorderRest from "../../services/TrafficRecorderRest";
+import axios from "axios";
+import trafficRecorderRest from "../../services/TrafficRecorderRest";
+import Dropzone from "react-dropzone";
+import {t} from "i18next";
+import TrafficRecordRest from "../../services/TrafficRecordRest";
 
 function MapMain() {
     const trafficrecorderRest = useMemo(() => new TrafficRecorderRest(), []);
@@ -53,8 +58,77 @@ function MapMain() {
 }
 
 function UploadCsv() {
+    // POST localhost:8081/hackathon/api/trafficrecorder/trafficRecordersJSON
+    // POST localhost:8081/hackathon/api/trafficrecord/inductionLoopCsv
+
+
+/*
+    values
+        .then((response) => {
+            callback(response);
+        })
+        .catch(error => {
+            errorResponse(error);
+    });
+*/
+    const trafficRecordRest = useMemo(() => new TrafficRecordRest(), []);
+
     return (
-        <Button href="#text-buttons" >IMPORT CSV</Button>
+        <>
+            <Dropzone
+                onDrop={accepted => {
+                    console.log(accepted);
+                    trafficRecordRest.uploadCsv(accepted).then(console.log);
+                }}
+            >
+                {({getRootProps, getInputProps}) => (
+                    <section>
+                        <div {...getRootProps()}>
+                            <input {...getInputProps()} />
+                            <p>{t("dropCsv.text")}</p>
+                        </div>
+                    </section>
+                )}
+            </Dropzone>
+        </>
+    );
+}
+
+function UploadJSON() {
+    // POST localhost:8081/hackathon/api/trafficrecorder/trafficRecordersJSON
+    // POST localhost:8081/hackathon/api/trafficrecord/inductionLoopCsv
+    const trafficrecorderRest = useMemo(() => new TrafficRecorderRest(), []);
+
+
+/*
+    values
+        .then((response) => {
+            callback(response);
+        })
+        .catch(error => {
+            errorResponse(error);
+        });*/
+
+    return (
+        <>
+            <Dropzone
+                accept="application/json"
+                onDrop={accepted => {
+                    trafficrecorderRest.uploadJSON(accepted).then(r => console.log(r));
+                }}
+                maxSize={200000}
+                multiple={false}
+            >
+                {({getRootProps, getInputProps}) => (
+                    <section>
+                        <div {...getRootProps()}>
+                            <input {...getInputProps()} />
+                            <p>{t("dropJSON.text")}</p>
+                        </div>
+                    </section>
+                )}
+            </Dropzone>
+        </>
     );
 }
 
@@ -66,6 +140,7 @@ function CreateMap() {
             <Typography variant={"h2"} gutterBottom>
                 {t("cityMap.title")}
             </Typography>
+            <UploadJSON/>
             <UploadCsv/>
             <MapMain/>
         </Container>
