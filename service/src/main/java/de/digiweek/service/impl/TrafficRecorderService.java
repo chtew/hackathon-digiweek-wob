@@ -81,7 +81,7 @@ public class TrafficRecorderService implements ServiceInterface<TrafficRecorderE
 
                 ArrayNode coordinates = (ArrayNode) feature.get("geometry").get("coordinates");
                 BigDecimal longitude = new BigDecimal(coordinates.get(0).asText());
-                BigDecimal latitude = new BigDecimal(coordinates.get(0).asText());
+                BigDecimal latitude = new BigDecimal(coordinates.get(1).asText());
                 trafficRecorderEntity.setLatitude(latitude);
                 trafficRecorderEntity.setLongitude(longitude);
 
