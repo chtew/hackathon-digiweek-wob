@@ -1,12 +1,13 @@
 package de.digiweek.service.impl;
-import de.digiweek.persistence.entity.TrafficRecorderEntity;
-import de.digiweek.persistence.repository.TrafficRecorderRepository;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
 import de.digiweek.persistence.entity.TrafficRecordEntity;
+import de.digiweek.persistence.entity.TrafficRecorderEntity;
 import de.digiweek.persistence.repository.TrafficRecordRepository;
+import de.digiweek.persistence.repository.TrafficRecorderRepository;
 
 /**
  * 
@@ -55,4 +56,6 @@ public class TrafficRecorderService implements ServiceInterface<TrafficRecorderE
         }
         return this.getRepository().getById(entity.getId());
     }
+
+
 }
