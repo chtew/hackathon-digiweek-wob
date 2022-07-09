@@ -36,11 +36,12 @@ function MapMain() {
                     trafficRecorderAll?.map(element => {
                         return (
                             <>
-                                <CircleMarker key={"point" + element.id} center={[element.latitude, element.longitude]} radius={9} color="black" fillOpacity={1} opacity={0}/>
-                                <CircleMarker key={"data" + element.id} center={[element.latitude, element.longitude]} radius={element.trafficRecord.length} color="green" opacity={0} fillOpacity={.5}>
-                                    <Popup>
-                                    Latitude: {element.latitude} , Longitude: {element.longitude}
-                                    </Popup>
+                                <CircleMarker key={"point" + element.id} center={[element.latitude, element.longitude]} radius={9} color="black" fillOpacity={1} opacity={0} onClick={() => alert("hallooooo")}/>
+                                <CircleMarker key={"data" + element.id} center={[element.latitude, element.longitude]} radius={element.trafficRecord.length} color="green" opacity={0} fillOpacity={.5}   eventHandlers={{
+                                    click: (e) => {
+                                        console.log('marker clicked', e)
+                                    },
+                                }}>
                                 </CircleMarker>
                             </>
                         );
