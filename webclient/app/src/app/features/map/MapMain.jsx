@@ -37,7 +37,7 @@ function MapMain() {
                         return (
                             <>
                                 <CircleMarker key={"point" + element.id} center={[element.latitude, element.longitude]} radius={9} color="black" fillOpacity={1} opacity={0}/>
-                                <CircleMarker key={element.id} center={[element.latitude, element.longitude]} radius={element.trafficRecord.length} color="green" opacity={0} fillOpacity={.5}>
+                                <CircleMarker key={"data" + element.id} center={[element.latitude, element.longitude]} radius={element.trafficRecord.length} color="green" opacity={0} fillOpacity={.5}>
                                     <Popup>
                                     Latitude: {element.latitude} , Longitude: {element.longitude}
                                     </Popup>
@@ -53,7 +53,7 @@ function MapMain() {
 
 function UploadCsv() {
     return (
-        <Button href="#text-buttons">IMPORT CSV</Button>
+        <Button href="#text-buttons" >IMPORT CSV</Button>
     );
 }
 
@@ -66,9 +66,7 @@ function CreateMap() {
                 {t("cityMap.title")}
             </Typography>
             <UploadCsv/>
-
             <MapMain/>
-
         </Container>
     );
 }
