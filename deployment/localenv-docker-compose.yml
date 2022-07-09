@@ -1,5 +1,17 @@
 version: "3.9"
 services:
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    ports:
+      - 8082:80
+    environment:
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_DATABASE: hackathon
+    networks:
+      - backend
+
   grafana:
     image: grafana/grafana-oss:9.0.2
     ports:
@@ -15,6 +27,8 @@ services:
       MYSQL_USER: 'hackathon'
       # You can use whatever password you like
       MYSQL_PASSWORD: 'hackathon'
+      # Root password for local debugging
+      MYSQL_ROOT_PASSWORD: 'root'
       # Password for root access
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
     ports:
