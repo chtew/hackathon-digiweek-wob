@@ -34,6 +34,13 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+        </dependency>
+        
+
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>

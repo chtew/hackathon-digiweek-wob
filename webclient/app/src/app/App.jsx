@@ -2,15 +2,15 @@ import React from "react";
 import MainContentRouter from "./MainContentRouter";
 import {CssBaseline} from "@mui/material";
 import {ErrorHandler} from "@starwit/react-starwit";
-import AppHeader from "./commons/appHeader/AppHeader";
 import {useTranslation} from "react-i18next";
-import {appItems} from "./AppConfig";
+import AppConfig from "./AppConfig";
 import Navigation from "./commons/navigation/Navigation";
 import logo from "./assets/images/logo-white.png";
 
 
 function App() {
     const {t} = useTranslation();
+    const {appItems} = AppConfig();
 
     return (
         <React.Fragment>

@@ -1,5 +1,6 @@
 package de.digiweek.rest.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
@@ -18,7 +19,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import de.digiweek.persistence.entity.TrafficRecordEntity;
 import de.digiweek.service.impl.TrafficRecordService;
@@ -37,30 +40,30 @@ public class TrafficRecordController {
     static final Logger LOG = LoggerFactory.getLogger(TrafficRecordController.class);
 
     @Autowired
-    private TrafficRecordService trafficrecordService;
+    private TrafficRecordService trafficRecordService;
 
     @Operation(summary = "Get all trafficrecord")
     @GetMapping
     public List<TrafficRecordEntity> findAll() {
-        return this.trafficrecordService.findAll();
+        return this.trafficRecordService.findAll();
     }
 
     @Operation(summary = "Get all trafficrecord without trafficRecorder")
     @GetMapping(value = "find-without-trafficRecorder")
     public List<TrafficRecordEntity> findAllWithoutTrafficRecorder() {
-        return trafficrecordService.findAllWithoutTrafficRecorder();
+        return trafficRecordService.findAllWithoutTrafficRecorder();
     }
 
     @Operation(summary = "Get all trafficrecord without other trafficRecorder")
     @GetMapping(value = "find-without-other-trafficRecorder/{id}")
     public List<TrafficRecordEntity> findAllWithoutOtherTrafficRecorder(@PathVariable("id") Long id) {
-        return trafficrecordService.findAllWithoutOtherTrafficRecorder(id);
+        return trafficRecordService.findAllWithoutOtherTrafficRecorder(id);
     }
 
     @Operation(summary = "Get trafficrecord with id")
     @GetMapping(value = "/{id}")
     public TrafficRecordEntity findById(@PathVariable("id") Long id) {
-        return this.trafficrecordService.findById(id);
+        return this.trafficRecordService.findById(id);
     }
 
     @Operation(summary = "Create trafficrecord")
@@ -72,13 +75,19 @@ public class TrafficRecordController {
     @Operation(summary = "Update trafficrecord")
     @PutMapping
     public TrafficRecordEntity update(@Valid @RequestBody TrafficRecordEntity entity) {
-        return trafficrecordService.saveOrUpdate(entity);
+        return trafficRecordService.saveOrUpdate(entity);
     }
 
     @Operation(summary = "Delete trafficrecord")
     @DeleteMapping(value = "/{id}")
     public void delete(@PathVariable("id") Long id) throws NotificationException {
-        trafficrecordService.delete(id);
+        trafficRecordService.delete(id);
+    }
+
+    @PostMapping(value = "/inductionLoopCsv")
+    public void uploadInductionLoopCsv(@RequestParam("file") MultipartFile file) throws IOException {
+        String fileContent = new String(file.getBytes());
+        trafficRecordService.loadInductionLoopCsv(fileContent);
     }
 
     @ExceptionHandler(value = { EntityNotFoundException.class })

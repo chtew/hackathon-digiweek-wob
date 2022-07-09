@@ -1,5 +1,5 @@
 import React, {useState, useMemo, useEffect} from "react";
-import {Container, Typography} from "@mui/material";
+import {Button, Container, Typography} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {MapContainer, TileLayer, CircleMarker, Popup} from "react-leaflet";
 import "./MapMain.css";
@@ -10,6 +10,7 @@ function MapMain() {
     const trafficrecorderRest = useMemo(() => new TrafficRecorderRest(), []);
     const [trafficRecorderAll, setTrafficRecorderAll] = useState();
     const [center, setCenter] = useState([52.427183696557591, 10.776275400214885]);
+    const {t} = useTranslation();
 
     useEffect(() => {
         reload();
@@ -34,16 +35,26 @@ function MapMain() {
                 {
                     trafficRecorderAll?.map(element => {
                         return (
-                            <CircleMarker key={element.id} center={[element.latitude, element.longitude]} radius={9}>
-                                <Popup>
-                                    Latitude: {element.latitude} , Longitude: {element.longitude}
-                                </Popup>
-                            </CircleMarker>
+                            <>
+                                <CircleMarker key={"point" + element.id} center={[element.latitude, element.longitude]} radius={9} color="black" fillOpacity={1} opacity={0} onClick={() => alert("hallooooo")}/>
+                                <CircleMarker key={"data" + element.id} center={[element.latitude, element.longitude]} radius={element.trafficRecord.length} color="green" opacity={0} fillOpacity={.5}   eventHandlers={{
+                                    click: (e) => {
+                                        console.log('marker clicked', e)
+                                    },
+                                }}>
+                                </CircleMarker>
+                            </>
                         );
                     })
                 }
             </MapContainer>
         </>
+    );
+}
+
+function UploadCsv() {
+    return (
+        <Button href="#text-buttons" >IMPORT CSV</Button>
     );
 }
 
@@ -53,12 +64,10 @@ function CreateMap() {
     return (
         <Container>
             <Typography variant={"h2"} gutterBottom>
-                {t("ein titel")}
+                {t("cityMap.title")}
             </Typography>
-            {t("der inhalt")}
-
-            <MapMain />
-
+            <UploadCsv/>
+            <MapMain/>
         </Container>
     );
 }
