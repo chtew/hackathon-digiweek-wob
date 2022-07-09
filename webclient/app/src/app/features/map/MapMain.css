@@ -1,8 +1,3 @@
-#map {
-    all: initial;
-    * {
-        all: unset;
-    }
-    height: 180px;
-
+.leaflet-container {
+    height: 600px;
 }
