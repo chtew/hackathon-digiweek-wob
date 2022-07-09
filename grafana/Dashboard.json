@@ -25,7 +25,7 @@
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
   "id": 1,
-  "iteration": 1657367810864,
+  "iteration": 1657385294043,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -60,8 +60,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -173,8 +172,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -310,8 +308,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -391,11 +388,11 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "mode": "thresholds"
           },
           "custom": {
             "axisLabel": "",
-            "axisPlacement": "auto",
+            "axisPlacement": "left",
             "axisSoftMin": 0,
             "fillOpacity": 80,
             "gradientMode": "none",
@@ -414,8 +411,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -428,12 +424,15 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "Time"
+              "options": "Durchschnitt am Wochenende"
             },
             "properties": [
               {
-                "id": "unit",
-                "value": "time:dddd"
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
               }
             ]
           }
@@ -455,27 +454,29 @@
           "displayMode": "list",
           "placement": "bottom"
         },
-        "orientation": "auto",
+        "orientation": "horizontal",
         "showValue": "auto",
         "stacking": "none",
         "tooltip": {
           "mode": "single",
           "sort": "none"
         },
+        "xField": "Detektor",
         "xTickLabelRotation": 0,
         "xTickLabelSpacing": 0
       },
+      "pluginVersion": "9.0.2",
       "targets": [
         {
           "datasource": {
             "type": "mysql",
             "uid": "DUcTla6nk"
           },
-          "format": "time_series",
+          "format": "table",
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n  AVG(CARCOUNT) AS \"Durchschnitt MIV\",\n  (WEEKDAY(RECORDDATE) * 1000 * 60 * 60 * 24 + 4000 * 24 * 60 * 60 ) AS \"time\", -- abusing date format so that monday (0) is actually a monday\n  EXTERNALID\nFROM TRAFFICRECORD INNER JOIN TRAFFICRECORDER on (TRAFFICRECORD.TRAFFICRECORDER_ID = TRAFFICRECORDER.ID)\nWHERE EXTERNALID in ($externalId)\nGROUP BY time, EXTERNALID\nORDER BY time ASC, EXTERNALID ASC",
+          "rawSql": "SELECT\n  Weekend.EXTERNALID as \"Detektor\",\n  NoWeekend.AvgInWeek as \"Durchschnitt unter der Woche\",\n  Weekend.AvgInWeek as \"Durchschnitt am Wochenende\"\nFROM \n (SELECT\n     AVG(CARCOUNT) as \"AvgInWeek\", EXTERNALID\n     FROM TRAFFICRECORD INNER JOIN TRAFFICRECORDER on (TRAFFICRECORD.TRAFFICRECORDER_ID = TRAFFICRECORDER.ID)\n     WHERE EXTERNALID in ($externalId) and WEEKDAY(RECORDDATE) in (5, 6) = 0\n     GROUP BY EXTERNALID\n     ORDER BY EXTERNALID ASC\n ) NoWeekend INNER JOIN\n(SELECT\n    AVG(CARCOUNT) as \"AvgInWeek\", EXTERNALID\n  FROM TRAFFICRECORD INNER JOIN TRAFFICRECORDER on (TRAFFICRECORD.TRAFFICRECORDER_ID = TRAFFICRECORDER.ID)\n  WHERE \n    EXTERNALID in ($externalId) and \n    WEEKDAY(RECORDDATE) in (5, 6) = 1\n  GROUP BY EXTERNALID\n  ORDER BY EXTERNALID ASC\n) Weekend on (Weekend.EXTERNALID = NoWeekend.EXTERNALID)\n\nWHERE Weekend.EXTERNALID in ($externalId)\nGROUP BY Weekend.EXTERNALID\nORDER BY Weekend.EXTERNALID ASC",
           "refId": "A",
           "select": [
             [
@@ -505,7 +506,7 @@
           "where": []
         }
       ],
-      "title": "Durschnittliche MIV pro Wochentag pro Detektor",
+      "title": "Durschnittliche MIV am Wochenende vs unter der Woche pro Detektor",
       "type": "barchart"
     }
   ],
@@ -519,12 +520,16 @@
         "current": {
           "selected": true,
           "text": [
+            "216_Z2C",
             "302_Z1A",
-            "216_Z2C"
+            "310_Z2C",
+            "317_Z2"
           ],
           "value": [
+            "216_Z2C",
             "302_Z1A",
-            "216_Z2C"
+            "310_Z2C",
+            "317_Z2"
           ]
         },
         "datasource": {
@@ -549,13 +554,13 @@
     ]
   },
   "time": {
-    "from": "2020-04-30T22:00:00.000Z",
-    "to": "2020-05-31T21:59:59.000Z"
+    "from": "2020-05-01T00:00:00.000Z",
+    "to": "2020-05-31T00:00:00.000Z"
   },
   "timepicker": {},
   "timezone": "",
   "title": "MIV pro Rekorder",
   "uid": "RY0Euae7z",
-  "version": 13,
+  "version": 16,
   "weekStart": ""
 }
