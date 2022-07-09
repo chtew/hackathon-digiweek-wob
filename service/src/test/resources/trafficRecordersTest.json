@@ -1,0 +1,51 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "id": 0,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    23.763967409132311,
+                    52.426682622946458
+                ]
+            },
+            "properties": {
+                "FID": 0,
+                "Signalanla": "110",
+                "Detektor": "ABC",
+                "Richtung_s": "Einwärts",
+                "Richtung": "Südost",
+                "Nachbardet": " ",
+                "Besonderhe": " ",
+                "Nachbard_1": " ",
+                "ID": "110_ABC",
+                "Lage": "Landstraße"
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 1,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    23.763309053623491,
+                    52.42729173101862
+                ]
+            },
+            "properties": {
+                "FID": 1,
+                "Signalanla": "110",
+                "Detektor": "ABB",
+                "Richtung_s": "Auswärts",
+                "Richtung": "Nord",
+                "Nachbardet": "110_ABC",
+                "Besonderhe": " ",
+                "Nachbard_1": " ",
+                "ID": "110_ABB",
+                "Lage": "Landstraße"
+            }
+        }
+    ]
+}
