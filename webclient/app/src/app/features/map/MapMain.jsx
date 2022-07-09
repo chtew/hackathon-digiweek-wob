@@ -17,14 +17,13 @@ import {CircleMarker, MapContainer, TileLayer} from "react-leaflet";
 import "./MapMain.css";
 import "leaflet/dist/leaflet.css";
 import TrafficRecorderRest from "../../services/TrafficRecorderRest";
-import axios from "axios";
-import trafficRecorderRest from "../../services/TrafficRecorderRest";
 import Dropzone from "react-dropzone";
 import {t} from "i18next";
 import TrafficRecordRest from "../../services/TrafficRecordRest";
 import {Close} from "@mui/icons-material";
 import {TransitionProps} from '@mui/material/transitions';
 import moment from "moment";
+import {HeatmapLayer} from "react-leaflet-heatmap-layer-v3";
 
 
 const Transition = React.forwardRef(function Transition(
@@ -53,7 +52,7 @@ function MapMain() {
 
     useEffect(() => {
         setLoadedImage(false);
-    },[spanStart, spanEnd])
+    }, [spanStart, spanEnd])
 
     function reload() {
         trafficRecorderRest.findAll().then(response => {
@@ -77,7 +76,7 @@ function MapMain() {
 
     function renderLoadedImage() {
         let content = [<img key={"image"}
-                            src={"http://localhost:3001/render/d-solo/RY0Euae7z/miv-pro-rekorder?orgId=1&from=" + moment(spanStart).unix()*1000 + "&to=" + moment(spanEnd).unix()*1000  + "&theme=light&panelId=3&width=1000&height=500&tz=Europe%2FBerlin&var-externalId=" + dialogEntity?.externalId}
+                            src={"http://localhost:3001/render/d-solo/RY0Euae7z/miv-pro-rekorder?orgId=1&from=" + moment(spanStart).unix() * 1000 + "&to=" + moment(spanEnd).unix() * 1000 + "&theme=light&panelId=3&width=1000&height=500&tz=Europe%2FBerlin&var-externalId=" + dialogEntity?.externalId}
                             onLoad={() => setLoadedImage(true)}/>];
 
         if (!loadedImage) {
@@ -146,10 +145,25 @@ function MapMain() {
         )
     }
 
+    function calculatePoints() {
+        const data = [];
+        trafficRecorderAll?.forEach(element => {
+            data.push([element?.latitude, element?.longitude, element?.trafficRecord[0]?.carCount])
+        })
+        return data;
+    }
+
 
     return (
         <>
             <MapContainer center={center} zoom={12} maxZoom={19} scrollWheelZoom={true}>
+                <HeatmapLayer
+                    fitBoundsOnLoad
+                    fitBoundsOnUpdate
+                    points={calculatePoints()}
+                    longitudeExtractor={m => m[1]}
+                    latitudeExtractor={m => m[0]}
+                    intensityExtractor={m => parseFloat(m[2])}/>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -205,8 +219,6 @@ function UploadCsv() {
 }
 
 function UploadJSON() {
-    // POST localhost:8081/hackathon/api/trafficrecorder/trafficRecordersJSON
-    // POST localhost:8081/hackathon/api/trafficrecord/inductionLoopCsv
     const trafficrecorderRest = useMemo(() => new TrafficRecorderRest(), []);
 
     return (
