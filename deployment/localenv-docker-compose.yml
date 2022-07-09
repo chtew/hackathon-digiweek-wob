@@ -64,7 +64,7 @@ services:
       - backend
 
   keycloak:
-    image: wizzn/keycloak:12
+    image: jboss/keycloak
     volumes:
       - ./keycloak/imports:/opt/jboss/keycloak/imports
       - ./keycloak/local-test-users.json:/opt/jboss/keycloak/standalone/configuration/keycloak-add-user.json
