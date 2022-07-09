@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {
-    AppBar,
+    AppBar, Box,
     Button,
     CircularProgress,
     Container,
@@ -198,21 +198,12 @@ function UploadCsv() {
     // POST localhost:8081/hackathon/api/trafficrecorder/trafficRecordersJSON
     // POST localhost:8081/hackathon/api/trafficrecord/inductionLoopCsv
 
-
-/*
-    values
-        .then((response) => {
-            callback(response);
-        })
-        .catch(error => {
-            errorResponse(error);
-    });
-*/
     const trafficRecordRest = useMemo(() => new TrafficRecordRest(), []);
 
     return (
         <>
             <Dropzone
+                accept={{'text/csv': ['.csv']}}
                 onDrop={accepted => {
                     trafficRecordRest.uploadCsv(accepted).then(console.log);
                 }}
@@ -221,7 +212,7 @@ function UploadCsv() {
                     <section>
                         <div {...getRootProps()}>
                             <input {...getInputProps()} />
-                            <p>{t("dropCsv.text")}</p>
+                            <p className="uploadDialog">{t("dropCsv.text")}</p>
                         </div>
                     </section>
                 )}
@@ -247,7 +238,7 @@ function UploadJSON() {
                     <section>
                         <div {...getRootProps()}>
                             <input {...getInputProps()} />
-                            <p>{t("dropJSON.text")}</p>
+                            <p className="uploadDialog">{t("dropJSON.text")}</p>
                         </div>
                     </section>
                 )}
@@ -264,8 +255,14 @@ function CreateMap() {
             <Typography variant={"h2"} gutterBottom>
                 {t("cityMap.title")}
             </Typography>
-            <UploadJSON/>
-            <UploadCsv/>
+            <Stack direction={"row"}>
+                <Box>
+                    <UploadJSON/>
+                </Box>
+                <Box>
+                    <UploadCsv/>
+                </Box>
+            </Stack>
             <MapMain/>
         </>
     );
