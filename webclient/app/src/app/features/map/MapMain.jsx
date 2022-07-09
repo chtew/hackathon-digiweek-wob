@@ -26,26 +26,20 @@ function MapMain() {
 
     return (
         <>
-            <MapContainer center={center} zoom={12} maxZoom={19} scrollWheelZoom={false} >
+            <MapContainer center={center} zoom={12} maxZoom={19} scrollWheelZoom={true} >
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                {/*
-                {trafficRecorderAll.map(element => {
+                {trafficRecorderAll?.map((element, index) => {
                     return (
-                        <CircleMarker key={element.id} center={[element.latitude, element.longitude]} radius={9}>
+                        <CircleMarker key={index} center={[element.latitude, element.longitude]} radius={9}>
                             <Popup>
                                 <h2>{element.name}</h2> <br /> Latitude: {element.latitude} , Longitude: {element.longitude}
                             </Popup>
                         </CircleMarker>
                     );
-                })} */}
-                <CircleMarker key="test" center={center} radius={9}>
-                    <Popup>
-                    A pretty CSS3 popup. <br /> Easily customizable.
-                    </Popup>
-                </CircleMarker>
+                })}
             </MapContainer>
         </>
     );
