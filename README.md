@@ -74,9 +74,9 @@ You can start the spring boot application in debug mode. See Spring Boot documen
 The database is available under localhost:3006
 
 ```
-Username:digiweek
-Database:digiweek
-Password:digiweek
+Username:hackathon
+Database:hackathon
+Password:hackathon
 ```
 MySQLWorkbench is recommended to access database for development purpose.
 
