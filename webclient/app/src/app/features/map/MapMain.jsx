@@ -146,7 +146,7 @@ function MapMain() {
             return null;
         }
         let content = [<img key={"image"}
-                            src={"http://localhost:3001/render/d-solo/RY0Euae7z/miv-pro-rekorder?orgId=1&from=" + moment(spanStart).unix() * 1000 + "&to=" + moment(spanEnd).unix() * 1000 + "&theme=light&panelId=3&width=1000&height=500&tz=Europe%2FBerlin&var-externalId=" + dialogEntity?.externalId}
+                            src={"http://localhost:3001/render/d-solo/RY0Euae7z/miv-pro-rekorder?orgId=1&from=" + moment(spanStart).unix() * 1000 + "&to=" + moment(spanEnd).unix() * 1000 + "&theme=light&panelId=9&width=1000&height=500&tz=Europe%2FBerlin&var-externalId=" + dialogEntity?.externalId}
                             onLoad={() => setLoadedImage(true)}/>];
 
         if (!loadedImage) {
