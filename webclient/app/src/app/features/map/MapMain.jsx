@@ -148,7 +148,7 @@ function MapMain() {
         }
         let content = [<img key={"image"}
                             src={"http://localhost:3001/render/d-solo/RY0Euae7z/miv-pro-rekorder?orgId=1&from=" + moment(spanStart).unix() * 1000 + "&to=" + moment(spanEnd).unix() * 1000 + "&theme=light&panelId=9&width=1000&height=500&tz=Europe%2FBerlin&var-externalId=" + dialogEntity?.externalId}
-                            onLoad={() => setLoadedImage(true)}/>];
+                            onLoad={() => setLoadedImage(true)} onError={() => setLoadedImage(true)}/>];
 
         if (!loadedImage) {
             content.push(<div style={{display: "flex", justifyContent: "center"}}><CircularProgress/></div>)
@@ -237,7 +237,7 @@ function MapMain() {
                             <Stack direction={"row"} spacing={5} style={{display: "flex", alignItems: "center"}}>
                                 <Box style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
                                     <LocationCity fontSize={"large"}/>
-                                    <Typography variant={"body1"}>Reiserichtung</Typography>
+                                    <Typography variant={"body1"}>{t("travelDirection")}</Typography>
                                 </Box>
                                 {dialogEntity?.cityDirection === "in" ? <KeyboardArrowLeft fontSize={"large"}/> :
                                     <KeyboardArrowRight fontSize={"large"}/>}

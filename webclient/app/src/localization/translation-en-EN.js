@@ -76,6 +76,7 @@ const translationEnEN = {
     "error.entity.notfound": "This element could not be found.",
     "grafana.dashboard": "Grafana Dashboard",
     "button.open": "Open",
-    "neighbor": "Neighbor"
+    "neighbor": "Neighbor",
+    "travelDirection": "Travel Direction"
 };
 export default translationEnEN;
