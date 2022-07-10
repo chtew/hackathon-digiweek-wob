@@ -11,7 +11,9 @@ services:
       - backend
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mariadb://db:3306/hackathon?useLegacyDatetimeCode=false&serverTimezone=CET
-
+    depends_on:
+      db:
+        condition: service_healthy
   grafana:
     image: grafana/grafana-oss:9.0.2
     ports:
@@ -29,6 +31,9 @@ services:
       GF_LOG_FILTERS: rendering:debug
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: adminadmin
+    depends_on:
+      db:
+        condition: service_healthy
 
   renderer:
     image: grafana/grafana-image-renderer:latest
@@ -54,7 +59,7 @@ services:
       # <Port exposed> : < MySQL Port running inside container>
       - '3306:3306'
     healthcheck:
-      test: ["CMD", "mysql" ,"-h", "localhost", "-P", "3306", "-u", "root", "-e", "select 1", "hackathon"]
+      test: ["CMD", "mysql" ,"-h", "localhost", "-P", "3306", "-u", "hackathon", "--password=hackathon",  "-e", "select 1", "hackathon"]
       interval: 5s
       timeout: 60s
       retries: 30
