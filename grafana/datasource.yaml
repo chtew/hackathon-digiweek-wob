@@ -7,8 +7,7 @@ datasources:
   - name: hackathon-db
     type: mysql
     uid: "DUcTla6nk"
-    # url: db:3306
-    url: localhost:3306
+    url: db:3306
     user: hackathon
     database: hackathon
     secureJsonData:
