@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+
+  app:
+    build: .
+    image: hackathon-app
+    ports:
+      - 8080:8081
+    networks:
+      - backend
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://db:3306/hackathon?useLegacyDatetimeCode=false&serverTimezone=CET
+    depends_on:
+      db:
+        condition: service_healthy
+  grafana:
+    image: grafana/grafana-oss:9.0.2
+    ports:
+      - 3001:3000
+    networks:
+      - backend
+    volumes:
+      # - grafana-data:/var/lib/grafana
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboard_files
+      - ./grafana/datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml
+      - ./grafana/dashboard_provider.yaml:/etc/grafana/provisioning/dashboards/dashboard_provider.yaml
+    environment:
+      GF_RENDERING_SERVER_URL: http://renderer:8081/render
+      GF_RENDERING_CALLBACK_URL: http://grafana:3000/
+      GF_LOG_FILTERS: rendering:debug
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: adminadmin
+    depends_on:
+      db:
+        condition: service_healthy
+
+  renderer:
+    image: grafana/grafana-image-renderer:latest
+    networks:
+      - backend
+    ports:
+      - 3002:8081
+
+  db:
+    image: mariadb:latest
+    restart: on-failure
+    environment:
+      MYSQL_DATABASE: 'hackathon'
+      # So you don't have to use root, but you can if you like
+      MYSQL_USER: 'hackathon'
+      # You can use whatever password you like
+      MYSQL_PASSWORD: 'hackathon'
+      # Root password for local debugging
+      MYSQL_ROOT_PASSWORD: 'root'
+      # Password for root access
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    ports:
+      # <Port exposed> : < MySQL Port running inside container>
+      - '3306:3306'
+    healthcheck:
+      test: ["CMD", "mysql" ,"-h", "localhost", "-P", "3306", "-u", "hackathon", "--password=hackathon",  "-e", "select 1", "hackathon"]
+      interval: 5s
+      timeout: 60s
+      retries: 30
+    volumes:
+      - hackathonv2-db-data:/var/lib/mysql
+    networks: # Networks to join (Services on the same network can communicate with each other using their name)
+      - backend
+
+volumes:
+  hackathonv2-db-data:
+
+networks:
+  backend:

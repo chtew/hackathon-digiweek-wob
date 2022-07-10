@@ -19,3 +19,7 @@
     background: #bbbbbb;
     cursor: pointer;
 }
+
+#datePicker {
+    padding-top: 5%;
+}

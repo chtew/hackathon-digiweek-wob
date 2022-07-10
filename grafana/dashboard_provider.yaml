@@ -1,0 +1,13 @@
+apiVersion: 1
+
+providers:
+  - name: 'hackathon'
+    folder: ''
+    type: file
+    disableDeletion: true
+    updateIntervalSeconds: 10
+    # <bool> allow updating provisioned dashboards from the UI
+    allowUiUpdates: true
+    options:
+      path: ${GF_PATHS_PROVISIONING}/dashboard_files
+      foldersFromFilesStructure: true

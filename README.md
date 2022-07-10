@@ -6,6 +6,14 @@
 * mariaDB 10.6 (available for development via docker-compose scripts)
 * using Keycloak is optional
 
+### How-to run (in project root folder)
+- Install frontend dependencies\
+  `npm install --prefix webclient/app/ --legacy-peer-deps`
+- Build project\
+  `mvn clean package -Pfrontend`
+- Run Docker-Compose project\
+  `docker compose up`
+
 ### Installation Steps
 
 :exclamation: Each step is executed from the project home directory.

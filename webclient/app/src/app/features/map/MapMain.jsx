@@ -112,6 +112,7 @@ function MapMain() {
                     </Toolbar>
                 </AppBar>
                 <Container>
+                    <p id="datePicker"></p>
                     <Stack direction={"row"} spacing={2}>
                         <TextField
                             id="start"
