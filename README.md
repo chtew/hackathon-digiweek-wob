@@ -12,7 +12,7 @@
 - Build project\
   `mvn clean package -Pfrontend`
 - Run Docker-Compose project\
-  `docker compose up`
+  `docker compose up --build`
 
 ### Installation Steps
 
@@ -74,9 +74,9 @@ You can start the spring boot application in debug mode. See Spring Boot documen
 The database is available under localhost:3006
 
 ```
-Username:digiweek
-Database:digiweek
-Password:digiweek
+Username:hackathon
+Database:hackathon
+Password:hackathon
 ```
 MySQLWorkbench is recommended to access database for development purpose.
 
@@ -98,7 +98,7 @@ Start the database without keycloak:
 
 ```bash
 cd deployment
-docker-compose -f mysqllocal-docker-compose.yml up
+docker-compose -f localenv-docker-compose.yml up
 ```
 
 ### How-to import data with curl
