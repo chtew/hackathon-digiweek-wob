@@ -41,6 +41,7 @@ const Transition = React.forwardRef(function Transition(
 
 function MapCenterer(props) {
     const map = useMap()
+    console.log(props)
 
     function setMarkerBounds(elements) {
         let markerBounds = latLngBounds([]);
@@ -51,7 +52,7 @@ function MapCenterer(props) {
     }
 
     useEffect(() => {
-        if (props.pointerData) {
+        if (props.pointerData && props.pointerData.length >0) {
             map.fitBounds(setMarkerBounds(props.pointerData));
         }
 
