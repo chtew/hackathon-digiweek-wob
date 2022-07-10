@@ -1,2 +1,2 @@
 Signalanlage,Detektorbezeichnung,DetektorPrimary,Datum,Jahr,Monat,Tag,Wochentag,Kalenderwoche,Wochenende,Feiertag,Schulferien_NDS,Werksferien_VW,Anzahl_Kfz,Anzahl_Intervalle
-110,ABC,110_ABC,2019-01-01,2019,1,1,2,2019-01,0,1,1,0,17,24
+110,ABC,110_ABC,2019-01-01,2019,1,1,2,2019-01,0,1,1,0,999,24

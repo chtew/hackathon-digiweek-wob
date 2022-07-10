@@ -38,6 +38,8 @@ public class TrafficRecordServiceTest {
     public void testLoadInductionLoopCsv() throws IOException {
         String fileContent = loadFile("inductionLoopTest.csv");
 
+        String fileContentNew = loadFile("inductionLoopTest_new.csv");
+
         TrafficRecorderEntity recorder = new TrafficRecorderEntity();
         recorder.setExternalId("110_ABC");
         trafficRecorderRepository.saveAndFlush(recorder);
@@ -45,6 +47,9 @@ public class TrafficRecordServiceTest {
         trafficRecordService.loadInductionLoopCsv(fileContent);
 
         assertThat(trafficRecordService.findAll(), contains(hasProperty("carCount", is(17))));
+
+        trafficRecordService.loadInductionLoopCsv(fileContentNew);
+        assertThat(trafficRecordService.findAll(), contains(hasProperty("carCount", is(999))));
     }
 
     private static String loadFile(String resourceName) throws IOException {

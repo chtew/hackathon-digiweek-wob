@@ -1,4 +1,5 @@
 package de.digiweek.service.impl;
+
 import java.io.IOException;
 import java.io.StringReader;
 import java.time.LocalDate;
@@ -22,7 +23,6 @@ import de.digiweek.persistence.entity.TrafficRecordEntity;
 import de.digiweek.persistence.entity.TrafficRecorderEntity;
 import de.digiweek.persistence.repository.TrafficRecordRepository;
 import de.digiweek.persistence.repository.TrafficRecorderRepository;
-
 
 /**
  * 
@@ -83,6 +83,7 @@ public class TrafficRecordService implements ServiceInterface<TrafficRecordEntit
             TrafficRecorderEntity recorderEntity = recorderEntitiesById.get(lineElems[2]);
             if (recorderEntity != null) {
                 entity.setTrafficRecorder(recorderEntity);
+                entity = trafficRecordRepository.overrideByExternalIdAndDate(entity);
             } else {
                 LOGGER.warn("Could not find traffic recorder for id " + lineElems[2]);
                 continue;
@@ -96,7 +97,7 @@ public class TrafficRecordService implements ServiceInterface<TrafficRecordEntit
 
     private Map<String, TrafficRecorderEntity> loadAllRecordersAsMap() {
         return trafficRecorderRepository.findAll().stream()
-            .collect(Collectors.toMap(TrafficRecorderEntity::getExternalId, t -> t));
+                .collect(Collectors.toMap(TrafficRecorderEntity::getExternalId, t -> t));
     }
 
     private Date convertToDate(String value) {
