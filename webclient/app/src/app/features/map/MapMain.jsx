@@ -6,6 +6,7 @@ import {
     CircularProgress,
     Container,
     Dialog,
+    Grid,
     IconButton,
     Slide,
     Slider,
@@ -20,13 +21,12 @@ import {CircleMarker, MapContainer, TileLayer, useMap} from "react-leaflet";
 import "./MapMain.css";
 import "leaflet/dist/leaflet.css";
 import TrafficRecorderRest from "../../services/TrafficRecorderRest";
-import Dropzone from "react-dropzone";
-import {t} from "i18next";
-import TrafficRecordRest from "../../services/TrafficRecordRest";
-import {Close} from "@mui/icons-material";
+import {ArrowRight, Close, KeyboardArrowLeft, KeyboardArrowRight, LocationCity, NextPlan} from "@mui/icons-material";
 import {TransitionProps} from '@mui/material/transitions';
 import moment from "moment";
 import {HeatmapLayer} from "react-leaflet-heatmap-layer-v3";
+import Dropzone from "react-dropzone";
+import TrafficRecordRest from "../../services/TrafficRecordRest";
 
 
 const Transition = React.forwardRef(function Transition(
@@ -132,6 +132,7 @@ function MapMain() {
 
 
     function handleOpenDialog(dialog) {
+        console.log("openedDialog", dialog)
         setDialogEntity(dialog);
         setLoadedImage(false);
     }
@@ -155,7 +156,18 @@ function MapMain() {
         return content;
     }
 
+    function findTrafficData(id) {
+        return trafficRecorderAll.find(trafficRecorder => {
+            return trafficRecorder.externalId === id
+        })
+    }
+
     function renderDialog() {
+        console.log(dialogEntity)
+        let neighbor;
+        if (dialogEntity?.neighbor) {
+            neighbor = findTrafficData(dialogEntity?.neighbor);
+        }
         return (
             <Dialog
                 fullScreen
@@ -173,14 +185,14 @@ function MapMain() {
                         >
                             <Close/>
                         </IconButton>
-                        <Typography sx={{ml: 2, flex: 1}} variant="h6" component="div">
-                            {dialogEntity?.externalId}
+                        <Typography sx={{ml: 2, flex: 1}} variant="h6" component="div" noWrap>
+                            {dialogEntity?.location} ({dialogEntity?.externalId})
                         </Typography>
                     </Toolbar>
                 </AppBar>
                 <Container>
-                    <p id="datePicker"></p>
-                    <Stack direction={"row"} spacing={2}>
+                    <Stack direction={"row"} spacing={2} p={5}
+                           style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
                         <TextField
                             id="start"
                             label="Start"
@@ -190,11 +202,14 @@ function MapMain() {
                             InputLabelProps={{
                                 shrink: true,
                             }}
+                            fullWidth
                             onChange={(evnt) => {
                                 setSpanStart(evnt.target.value)
                             }}
                         />
+                        <ArrowRight/>
                         <TextField
+                            fullWidth
                             id="end"
                             label="Ende"
                             type="date"
@@ -209,7 +224,48 @@ function MapMain() {
 
                         />
                     </Stack>
-                    {renderLoadedImage()}
+                    <Box style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        flexDirection: "column",
+                        alignItems: "center"
+                    }}>
+                        {renderLoadedImage()}
+                    </Box>
+                    <Grid container>
+                        <Grid item xs={6} style={{display: "flex", justifyContent: "center"}}>
+                            <Stack direction={"row"} spacing={5} style={{display: "flex", alignItems: "center"}}>
+                                <Box style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+                                    <LocationCity fontSize={"large"}/>
+                                    <Typography variant={"body1"}>Reiserichtung</Typography>
+                                </Box>
+                                {dialogEntity?.cityDirection === "in" ? <KeyboardArrowLeft fontSize={"large"}/> :
+                                    <KeyboardArrowRight fontSize={"large"}/>}
+
+                            </Stack>
+                        </Grid>
+                        <Grid item xs={6} style={{display: "flex", justifyContent: "center"}}>
+                            <Stack direction={"row"} spacing={5} style={{display: "flex", alignItems: "center"}}>
+
+                                <Box style={{display: "flex", flexDirection: "column", alignItems: "center"}} mr={5}>
+                                    <NextPlan fontSize={"large"}/>
+                                    <Typography variant={"body1"}>{t("neighbor")}</Typography>
+                                </Box>
+                                <Button
+
+                                    onClick={() => {
+                                        handleOpenDialog(neighbor)
+                                    }}
+                                    style={{width: "100% !important"}}
+                                    disabled={!dialogEntity?.neighbor}
+                                    variant={"contained"}
+                                    fullWidth
+                                >
+                                    {t("button.open")}
+                                </Button>
+                            </Stack>
+                        </Grid>
+                    </Grid>
                 </Container>
             </Dialog>
         )
@@ -218,7 +274,6 @@ function MapMain() {
     function calculatePoints() {
         const data = [];
         trafficRecorderMap?.forEach(element => {
-            let foundTrafficRec = element.trafficRecord.get(sliderValue);
             if (element.trafficRecord.has(sliderValue)) {
                 data.push([element?.latitude, element?.longitude, element.trafficRecord.get(sliderValue)])
             }
@@ -239,7 +294,7 @@ function MapMain() {
         if (steps) {
 
             return (
-                <Box pt={15}>
+                <Box pt={5}>
                     <Slider
                         defaultValue={steps[0].value}
                         min={steps[0].value}
@@ -276,7 +331,8 @@ function MapMain() {
                         }
                         return (
                             <>
-                                <CircleMarker key={"data" + element.id} center={[element.latitude, element.longitude]}
+                                <CircleMarker key={"data" + element.id}
+                                              center={[element.latitude, element.longitude]}
                                               radius={12} color="black" opacity={0}
                                               fillOpacity={.2} eventHandlers={{
                                     click: (e) => {
@@ -317,6 +373,7 @@ function UploadCsv() {
     // POST localhost:8081/hackathon/api/trafficrecord/inductionLoopCsv
 
     const trafficRecordRest = useMemo(() => new TrafficRecordRest(), []);
+    const {t} = useTranslation();
 
     return (
         <>
@@ -341,6 +398,8 @@ function UploadCsv() {
 
 function UploadJSON() {
     const trafficrecorderRest = useMemo(() => new TrafficRecorderRest(), []);
+    const {t} = useTranslation();
+
 
     return (
         <>

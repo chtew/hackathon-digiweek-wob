@@ -73,6 +73,9 @@ const translationEnEN = {
     "error.unknown": "An unknown error occurred.",
     "error.apptemplate.notfound": "The Template could not be found.",
     "error.app.notfound": "This App could not be found.",
-    "error.entity.notfound": "This element could not be found."
+    "error.entity.notfound": "This element could not be found.",
+    "grafana.dashboard": "Grafana Dashboard",
+    "button.open": "Open",
+    "neighbor": "Neighbor"
 };
 export default translationEnEN;
