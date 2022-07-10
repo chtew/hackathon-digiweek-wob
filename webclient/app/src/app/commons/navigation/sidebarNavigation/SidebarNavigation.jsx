@@ -58,6 +58,11 @@ function SidebarNavigation(props) {
                                 </ListItemButton>
                             </ListItem>
                         ))}
+                        <ListItem disablePadding>
+                            <ListItemButton onClick={() =>  window.open("http://localhost:3001/d/RY0Euae7z/miv-pro-rekorder?orgId=1", '_blank').focus()}>
+                                <ListItemText primary={t("grafana.dashboard")}/>
+                            </ListItemButton>
+                        </ListItem>
                     </List>
                 </Box>
             </Drawer>
