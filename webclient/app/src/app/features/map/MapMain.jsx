@@ -164,6 +164,7 @@ function MapMain() {
                     fitBoundsOnLoad
                     fitBoundsOnUpdate
                     points={calculatePoints()}
+                    fillOpacity={1}
                     longitudeExtractor={m => m[1]}
                     latitudeExtractor={m => m[0]}
                     intensityExtractor={m => parseFloat(m[2])}/>
@@ -176,8 +177,8 @@ function MapMain() {
                         return (
                             <>
                                 <CircleMarker key={"data" + element.id} center={[element.latitude, element.longitude]}
-                                              radius={9} color="green" opacity={0}
-                                              fillOpacity={.5} eventHandlers={{
+                                              radius={12} color="black" opacity={0}
+                                              fillOpacity={.2} eventHandlers={{
                                     click: (e) => {
                                         handleOpenDialog(element)
                                     },
