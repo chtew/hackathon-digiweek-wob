@@ -32,6 +32,7 @@ class TrafficRecorderServiceTest {
     @Test
     public void testLoadTrafficRecordersJson() throws IOException {
         String fileContent = loadFile("trafficRecordersTest.json");
+        String newFileContent = loadFile("trafficRecordersTest_new.json");
 
         trafficRecorderService.loadTrafficRecorderJson(fileContent);
         List<TrafficRecorderEntity> trafficRecorders = trafficRecorderService.findAll();
@@ -41,7 +42,7 @@ class TrafficRecorderServiceTest {
         assertEquals(1, trafficRecorders.size());
         assertEquals(CityDirection.in, trafficRecorders.get(0).getCityDirection());
 
-        trafficRecorderService.loadTrafficRecorderJson(fileContent);
+        trafficRecorderService.loadTrafficRecorderJson(newFileContent);
         trafficRecorders = trafficRecorderService.findByExternalId("110_ABC");
         assertEquals(1, trafficRecorders.size());
         assertEquals(CityDirection.out, trafficRecorders.get(0).getCityDirection());
