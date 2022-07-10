@@ -1,0 +1,16 @@
+# config file version
+apiVersion: 1
+
+# list of datasources to insert/update depending
+# what's available in the database
+datasources:
+  - name: hackathon-db
+    type: mysql
+    uid: "DUcTla6nk"
+    # url: db:3306
+    url: localhost:3306
+    user: hackathon
+    database: hackathon
+    secureJsonData:
+      password: hackathon
+    editable: true
