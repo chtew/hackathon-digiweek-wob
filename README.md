@@ -12,7 +12,7 @@
 - Build project\
   `mvn clean package -Pfrontend`
 - Run Docker-Compose project\
-  `docker compose up`
+  `docker compose up --build`
 
 ### Installation Steps
 
