@@ -17,4 +17,5 @@ public interface TrafficRecordRepository extends JpaRepository<TrafficRecordEnti
 
     @Query("SELECT e FROM TrafficRecordEntity e WHERE NOT EXISTS (SELECT r FROM e.trafficRecorder r WHERE r.id <> ?1)")
     public List<TrafficRecordEntity> findAllWithoutOtherTrafficRecorder(Long id);
+
 }

@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
+import de.digiweek.persistence.entity.CityDirection;
 import de.digiweek.persistence.entity.TrafficRecorderEntity;
 
 @SpringBootTest()
@@ -34,11 +36,21 @@ class TrafficRecorderServiceTest {
         trafficRecorderService.loadTrafficRecorderJson(fileContent);
         List<TrafficRecorderEntity> trafficRecorders = trafficRecorderService.findAll();
         assertThat(trafficRecorderService.findAll(), hasItems(hasProperty("externalId", is("110_ABC"))));
+
+        trafficRecorders = trafficRecorderService.findByExternalId("110_ABC");
+        assertEquals(1, trafficRecorders.size());
+        assertEquals(CityDirection.in, trafficRecorders.get(0).getCityDirection());
+
+        trafficRecorderService.loadTrafficRecorderJson(fileContent);
+        trafficRecorders = trafficRecorderService.findByExternalId("110_ABC");
+        assertEquals(1, trafficRecorders.size());
+        assertEquals(CityDirection.out, trafficRecorders.get(0).getCityDirection());
     }
 
     private static String loadFile(String resourceName) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(TrafficRecorderServiceTest.class.getClassLoader().getResourceAsStream(resourceName)));
-        
+        BufferedReader reader = new BufferedReader(new InputStreamReader(
+                TrafficRecorderServiceTest.class.getClassLoader().getResourceAsStream(resourceName)));
+
         StringBuilder stringBuilder = new StringBuilder();
         int lastChar = -1;
         do {

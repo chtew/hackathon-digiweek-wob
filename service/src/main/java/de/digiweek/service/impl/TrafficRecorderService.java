@@ -1,6 +1,7 @@
 package de.digiweek.service.impl;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,35 +68,40 @@ public class TrafficRecorderService implements ServiceInterface<TrafficRecorderE
     }
 
     public void loadTrafficRecorderJson(String json) throws JsonProcessingException {
-            JsonNode jsonNode = objectMapper.readTree(json);
-            ArrayNode features = (ArrayNode) jsonNode.get("features");
+        JsonNode jsonNode = objectMapper.readTree(json);
+        ArrayNode features = (ArrayNode) jsonNode.get("features");
 
-            for (JsonNode feature : features) {
-                TrafficRecorderEntity trafficRecorderEntity = new TrafficRecorderEntity();
+        for (JsonNode feature : features) {
+            TrafficRecorderEntity trafficRecorderEntity = new TrafficRecorderEntity();
 
-                CityDirection cityDirection = getCityDirection(feature);
-                trafficRecorderEntity.setCityDirection(cityDirection);
-                
-                String externalId = feature.get("properties").get("ID").asText();
-                trafficRecorderEntity.setExternalId(externalId);
+            CityDirection cityDirection = getCityDirection(feature);
+            trafficRecorderEntity.setCityDirection(cityDirection);
 
-                ArrayNode coordinates = (ArrayNode) feature.get("geometry").get("coordinates");
-                BigDecimal longitude = new BigDecimal(coordinates.get(0).asText());
-                BigDecimal latitude = new BigDecimal(coordinates.get(1).asText());
-                trafficRecorderEntity.setLatitude(latitude);
-                trafficRecorderEntity.setLongitude(longitude);
+            String externalId = feature.get("properties").get("ID").asText();
+            trafficRecorderEntity.setExternalId(externalId);
 
-                String location = feature.get("properties").get("Lage").asText();
-                trafficRecorderEntity.setLocation(location);
-                String neighbor = feature.get("properties").get("Nachbardet").asText();
-                trafficRecorderEntity.setNeighbor(neighbor);
-                String specialty = feature.get("properties").get("Besonderhe").asText();
-                trafficRecorderEntity.setSpecialty(specialty);
+            ArrayNode coordinates = (ArrayNode) feature.get("geometry").get("coordinates");
+            BigDecimal longitude = new BigDecimal(coordinates.get(0).asText());
+            BigDecimal latitude = new BigDecimal(coordinates.get(1).asText());
+            trafficRecorderEntity.setLatitude(latitude);
+            trafficRecorderEntity.setLongitude(longitude);
 
-                trafficrecorderRepository.saveAndFlush(trafficRecorderEntity);
-                
-            }
+            String location = feature.get("properties").get("Lage").asText();
+            trafficRecorderEntity.setLocation(location);
+            String neighbor = feature.get("properties").get("Nachbardet").asText();
+            trafficRecorderEntity.setNeighbor(neighbor);
+            String specialty = feature.get("properties").get("Besonderhe").asText();
+            trafficRecorderEntity.setSpecialty(specialty);
+            trafficRecorderEntity = trafficrecorderRepository.overrideByExternalIdEntity(trafficRecorderEntity);
 
+            trafficrecorderRepository.saveAndFlush(trafficRecorderEntity);
+
+        }
+
+    }
+
+    public List<TrafficRecorderEntity> findByExternalId(String externalId) {
+        return trafficrecorderRepository.findByExternalId(externalId);
     }
 
     private CityDirection getCityDirection(JsonNode feature) {
