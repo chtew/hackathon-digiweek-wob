@@ -2,11 +2,11 @@
 
 Nowaday, city planning should be based on traffic analysis. In order to support this, we provide analysis tools. You can:
 * easily import traffic data via CSV and JSON
-* see traffic counts on a citymap as heapmap
+* see traffic counts in a time range as city-heat-map
 * analyse data via diagrams (grafana integration) and add own diagrams
 
-![dashboards](https://user-images.githubusercontent.com/10485792/178258651-e6dd5b19-a6b6-4e7d-9594-9ee93bd834d2.png | width=100)
-![mobilityMap](https://user-images.githubusercontent.com/10485792/178258676-22aa0ab0-c371-477c-b9a4-1eaaf5af3f6d.png | width=100)
+<img src="https://user-images.githubusercontent.com/10485792/178258651-e6dd5b19-a6b6-4e7d-9594-9ee93bd834d2.png" width="50%"/>
+<img src="https://user-images.githubusercontent.com/10485792/178258676-22aa0ab0-c371-477c-b9a4-1eaaf5af3f6d.png" width="50%"/>
 
 ### Prerequisites
 
