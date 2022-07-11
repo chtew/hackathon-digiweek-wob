@@ -1,6 +1,6 @@
 # Traffic Analysis for better Mobility and City Planning
 
-Nowaday, city planning should be based on traffic analysis. In order to support this, we provide analysis tools. You can:
+Nowaday, city planning should be based on traffic analysis. With our traffic analysis tool you can:
 * easily import traffic data via CSV and JSON
 * see traffic counts in a time range as city-heat-map
 * analyse data via diagrams (grafana integration) and add own diagrams
@@ -13,6 +13,7 @@ Nowaday, city planning should be based on traffic analysis. In order to support 
 * Maven 3
 * NodeJs (16.9.1) and NPM (8.3.2) - [NodeJS Install](https://nodejs.org/en/download/package-manager/)
 * mariaDB 10.6 (available for development via docker-compose scripts)
+* docker, docker compose, [docker compose cli plugin](https://docs.docker.com/compose/install/compose-plugin/)
 * using Keycloak is optional
 
 ### How-to run (in project root folder)
