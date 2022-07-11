@@ -14,10 +14,10 @@ function MainContentRouter() {
                 <Route path={"/map"} component={Map}/>
             </Switch>
             <Route exact path={"/"} component={Home}/>
-            <Route path="/logout" component={() => {
+            {/*<Route path="/logout" component={() => {
                 window.location.href = window.location.pathname + "api/user/logout";
                 return null;
-            }}/>
+            }}/>*/}
         </>
     );
 }

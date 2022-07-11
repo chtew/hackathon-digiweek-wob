@@ -36,8 +36,8 @@ function SidebarNavigation(props) {
                             {props.title}
                         </Typography>
                     <div className={headerStyles.spacer}/>
-                    <IconButton color="secondary" disableRipple className={headerStyles.linkButton}
-                                onClick={() => history.push("/logout")}><Logout/></IconButton>
+                    {/*<IconButton color="secondary" disableRipple className={headerStyles.linkButton}
+                                onClick={() => history.push("/logout")}><Logout/></IconButton>*/}
                 </Toolbar>
             </AppBar>
             <Drawer
