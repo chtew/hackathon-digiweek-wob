@@ -1,3 +1,17 @@
+# Traffic Analysis for better City Planning
+
+Nowaday, city planning should be based on traffic analysis. In order to support this, we provide analysis tools. You can:
+* easily import traffic data via CSV and JSON
+* see traffic counts on a citymap as heapmap
+* analyse data via diagrams (grafana integration) and add own diagrams
+
+![dashboards](https://user-images.githubusercontent.com/10485792/178258651-e6dd5b19-a6b6-4e7d-9594-9ee93bd834d2.png)
+![mobilityMap](https://user-images.githubusercontent.com/10485792/178258676-22aa0ab0-c371-477c-b9a4-1eaaf5af3f6d.png)
+
+## Contributors
+
+
+
 ### Prerequisites
 
 * Java JDK 14 or later
