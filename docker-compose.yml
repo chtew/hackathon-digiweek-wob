@@ -6,7 +6,7 @@ services:
     build: .
     image: hackathon-app
     ports:
-      - 8080:8081
+      - 8083:8081
     networks:
       - backend
     environment:
@@ -22,6 +22,7 @@ services:
       - backend
     volumes:
       # - grafana-data:/var/lib/grafana
+      - ./grafana/default.ini:/etc/grafana/grafana.ini
       - ./grafana/dashboards:/etc/grafana/provisioning/dashboard_files
       - ./grafana/datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml
       - ./grafana/dashboard_provider.yaml:/etc/grafana/provisioning/dashboards/dashboard_provider.yaml
@@ -60,7 +61,7 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
     ports:
       # <Port exposed> : < MySQL Port running inside container>
-      - '3306:3306'
+      - '3308:3306'
     healthcheck:
       test: ["CMD", "mysql" ,"-h", "localhost", "-P", "3306", "-u", "hackathon", "--password=hackathon",  "-e", "select 1", "hackathon"]
       interval: 5s
