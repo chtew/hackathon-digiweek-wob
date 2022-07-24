@@ -88,13 +88,3 @@ jobs:
         context: .
         push: true
         tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.publish_tag.outputs.tag_name }}
-
-    - name: Build docker image with tag version and push to dockerhub
-      uses: docker/build-push-action@v1
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME  }}
-        password: ${{ secrets.DOCKERHUB_PASSWORD }}
-        repository: digiweekorg/hackathon
-        tags: ${{ steps.publish_tag.outputs.tag_name }}
-        path: .
-        dockerfile: ./Dockerfile
