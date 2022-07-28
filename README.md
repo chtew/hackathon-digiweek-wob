@@ -20,7 +20,7 @@ Nowaday, city planning should be based on traffic analysis. With our traffic ana
 - Install frontend dependencies\
   `npm install --prefix webclient/app/ --legacy-peer-deps`
 - Build project\
-  `mvn clean package -Pfrontend`
+  `mvn clean package -P frontend`
 - Run Docker-Compose project\
   `docker compose up --build`
 
