@@ -10,31 +10,57 @@ services:
     networks:
       - backend
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mariadb://db:3306/hackathon?useLegacyDatetimeCode=false&serverTimezone=CET
+      #SPRING_PROFILES_ACTIVE: dev
+      SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/hackathon?useLegacyDatetimeCode=false&serverTimezone=CET
+      SPRING_DATASOURCE_USERNAME: hackathon
+      SPRING_DATASOURCE_PASSWORD: hackathon
+      SERVER_USE_FORWARD_HEADERS: 'true'
+      SERVER_FORWARD_HEADERS_STRATEGY: FRAMEWORK
+      KEYCLOAK_AUTH-SERVER-URL: http://${HOST_IP}:8080/auth
+      SSL_REQUIRED: external
+      KEYCLOAK_CREDENTIALS_SECRET: ${CLIENT_SECRET}
+      KEYCLOAK_PUBLIC-CLIENT: 'false'
+      KEYCLOAK_REALM: citydashboard
+      KEYCLOAK_RESOURCE: citydashboard
     depends_on:
       db:
         condition: service_healthy
   grafana:
     image: grafana/grafana-oss:9.0.2
     ports:
-      - 3001:3000
+      - 3001:3001
     networks:
       - backend
     volumes:
       # - grafana-data:/var/lib/grafana
-      - ./grafana/default.ini:/etc/grafana/grafana.ini
+      #- ./grafana/default.ini:/etc/grafana/grafana.ini
       - ./grafana/dashboards:/etc/grafana/provisioning/dashboard_files
       - ./grafana/datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml
       - ./grafana/dashboard_provider.yaml:/etc/grafana/provisioning/dashboards/dashboard_provider.yaml
     environment:
+      GF_SERVER_HTTP_PORT: 3001
       GF_RENDERING_SERVER_URL: http://renderer:8081/render
-      GF_RENDERING_CALLBACK_URL: http://grafana:3000/
+      GF_RENDERING_CALLBACK_URL: http://grafana:3001/
       GF_LOG_FILTERS: rendering:debug
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: adminadmin
-      GF_AUTH_ANONYMOUS_ENABLED: "true"
-      GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
-      GF_AUTH_DISABLE_LOGIN_FORM: "true"
+      GF_AUTH_DISABLE_LOGIN_FORM: true
+      GF_AUTH_GENERIC_OAUTH_ENABLED: true
+      GF_AUTH_GENERIC_OAUTH_ALLOW_SIGN_UP: false
+      GF_AUTH_GENERIC_OAUTH_NAME: OAuth
+      GF_AUTH_GENERIC_OAUTH_CLIENT_ID: citydashboard
+      GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH: '''Viewer'''
+      GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET: ${CLIENT_SECRET}
+      GF_AUTH_GENERIC_OAUTH_SCOPES: profile email
+      GF_LOG_FILTERS: auth:debug
+      GF_AUTH_GENERIC_OAUTH_TOKEN_URL: http://${HOST_IP}:8080/auth/realms/citydashboard/protocol/openid-connect/token
+      GF_AUTH_GENERIC_OAUTH_AUTH_URL: http://${HOST_IP}:8080/auth/realms/citydashboard/protocol/openid-connect/auth
+      GF_AUTH_GENERIC_OAUTH_API_URL: http://${HOST_IP}:8080/auth/realms/citydashboard/protocol/openid-connect/userinfo
+      GF_AUTH_BASIC_ENABLED: false
+      GF_SECURITY_ALLOW_EMBEDDING: true
+      GF_AUTH_ANONYMOUS_ENABLED: false
+      GF_SECURITY_COOKIE_SAMESITE: none
+      GF_SECURITY_COOKIE_SECURE: true
     depends_on:
       db:
         condition: service_healthy
