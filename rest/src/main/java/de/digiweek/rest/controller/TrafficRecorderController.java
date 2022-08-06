@@ -48,7 +48,6 @@ public class TrafficRecorderController {
         return this.trafficRecorderService.findAll();
     }
 
-
     @Operation(summary = "Get trafficrecorder with id")
     @GetMapping(value = "/{id}")
     public TrafficRecorderEntity findById(@PathVariable("id") Long id) {
@@ -81,7 +80,7 @@ public class TrafficRecorderController {
     }
 
     @PostMapping(value = "/trafficRecordersJSON")
-    public void uploadInductionLoopCsv(@RequestParam("file") MultipartFile file) throws IOException {
+    public void uploadTrafficRecorderJson(@RequestParam("file") MultipartFile file) throws IOException {
         String fileContent = new String(file.getBytes());
         trafficRecorderService.loadTrafficRecorderJson(fileContent);
     }
