@@ -20,10 +20,13 @@ version: 2.2.1
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application. Versions are not expected to
 # follow Semantic Versioning. They should reflect the version the application is using.
-appVersion: :v2.2.1
+appVersion: v2.2.1
 
 dependencies:
   - name: mariadb
     version: 11.0.13
     repository: https://charts.bitnami.com/bitnami
+  - name: grafana
+    version: 6.32.11
+    repository: https://grafana.github.io/helm-charts
     

@@ -1,12 +1,12 @@
 global:
   keycloak:
-    authServerUrl: http://markus-desktop2/cityos-auth
+    authServerUrl: http://anett-xmg-fusion-15-xfu15l19/cityos-auth
 
 replicaCount: 1
 
 image:
-  repository: docker pull ghcr.io/chtew/hackathon-digiweek-wob
-  #tag: "v1.1.0" # default from Chart.yaml
+  repository: ghcr.io/chtew/hackathon-digiweek-wob
+  tag: "v2.2.1"
   pullPolicy: Always
 
 imagePullSecrets:
@@ -16,7 +16,7 @@ fullnameOverride: ""
 
 service:
   type: ClusterIP
-  port: 8083
+  port: 8081
 
 serviceAccount:
   create: false
@@ -43,11 +43,25 @@ ingress:
     kubernetes.io/ingress.class: traefik
     cert-manager.io/cluster-issuer: "letsencrypt-prod"  
   hosts:
-    - host: markus-desktop2
+    - host: anett-xmg-fusion-15-xfu15l19
   tls:
     - secretName: host-tls
       hosts:
-        - markus-desktop2
+        - anett-xmg-fusion-15-xfu15l19
+
+  startupScripts:
+    # cli script that reconfigures WildFly
+    contextPath.cli: |
+      embed-server --server-config=standalone-ha.xml --std-out=echo
+      batch
+      {{- if ne .Values.contextPath "auth" }}
+      /subsystem=keycloak-server/:write-attribute(name=web-context,value={{ if eq .Values.contextPath "" }}/{{ else }}{{ .Values.contextPath }}{{ end }})
+      {{- if eq .Values.contextPath "" }}
+      /subsystem=undertow/server=default-server/host=default-host:write-attribute(name=default-web-module,value=keycloak-server.war)
+      {{- end }}
+      {{- end }}
+      run-batch
+      stop-embedded-server
 
 mariadb:
   auth:
@@ -60,10 +74,30 @@ mariadb:
       ports:
         mysql: 3308
 
-  livenessProbe: |
-    httpGet:
-      path: /cityos-auth/
-      port: http
-    initialDelaySeconds: 0
-    timeoutSeconds: 5
+grafana:
+  ingress:
+    enabled: true
+    hosts:
+      - "anett-xmg-fusion-15-xfu15l19"
+    path: "/grafana"
+  imagerenderer:
+    enabled: true
+  env:
+      GF_SECURITY_ADMIN_USER: 'admin'
+      GF_SECURITY_ADMIN_PASSWORD: 'adminadmin'
+      GF_AUTH_DISABLE_LOGIN_FORM: 'true'
+      GF_AUTH_GENERIC_OAUTH_ENABLED: 'true'
+      GF_AUTH_GENERIC_OAUTH_ALLOW_SIGN_UP: 'true'
+      GF_AUTH_GENERIC_OAUTH_NAME: 'OAuth'
+      GF_AUTH_GENERIC_OAUTH_CLIENT_ID: 'citydashboard'
+      GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH: 'Viewer'
+      GF_AUTH_GENERIC_OAUTH_SCOPES: 'openid profile email'
+      GF_AUTH_GENERIC_OAUTH_TOKEN_URL: 'https://demo.city-os.eu/cityos-auth/realms/citydashboard/protocol/openid-connect/token'
+      GF_AUTH_GENERIC_OAUTH_AUTH_URL: 'https://demo.city-os.eu/cityos-auth/realms/citydashboard/protocol/openid-connect/auth'
+      GF_AUTH_GENERIC_OAUTH_API_URL: 'https://demo.city-os.eu/cityos-auth/realms/citydashboard/protocol/openid-connect/userinfo'
+      GF_AUTH_BASIC_ENABLED: 'false'
+      GF_SECURITY_ALLOW_EMBEDDING: 'true'
+      GF_AUTH_ANONYMOUS_ENABLED: 'false'
+
+
 
