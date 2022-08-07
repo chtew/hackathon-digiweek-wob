@@ -63,6 +63,10 @@ spec:
               value: "true"
             - name: SERVER_FORWARD_HEADERS_STRATEGY
               value: FRAMEWORK
+            - name: KEYCLOAK_REALM
+              value: {{ .Values.global.keycloak.realm }}
+            - name: KEYCLOAK_RESOURCE
+              value: {{ .Values.global.keycloak.resource }}
             {{- with .Values.extraEnv }}
             {{- tpl . $ | nindent 12 }}
             {{- end }}              

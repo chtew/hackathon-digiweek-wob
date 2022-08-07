@@ -1,6 +1,8 @@
 global:
   keycloak:
     authServerUrl: http://anett-xmg-fusion-15-xfu15l19/cityos-auth
+    realm: citydashboard
+    resource: citydashboard
 
 replicaCount: 1
 
@@ -32,9 +34,11 @@ initContainers:
     tag: latest
 
 # add extra environment params to app server
-#extraEnv: |
-#  - name: MY_PARAM
-#    value: value
+#  extraEnv: |
+#    - name: KEYCLOAK_REALM
+#      value: 'citydashboard'
+#    - name: KEYCLOAK_RESOURCE
+#      value: 'citydashboard'
 
 # adapt if other ingress controller as traefik is used.
 ingress:
