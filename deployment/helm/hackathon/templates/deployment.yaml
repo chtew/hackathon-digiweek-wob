@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "app.fullname" . }}
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "app.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "app.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "app.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: wait4mariadb
+          image: "{{ .Values.initContainers.wait4mariadb.image }}:{{ .Values.initContainers.wait4mariadb.tag }}"
+          resources:
+            {{- toYaml .Values.initContainers.resources | nindent 12 }}
+          securityContext:
+            {{- toYaml .Values.initContainers.securityContext | nindent 12 }}
+          command: 
+            - 'sh'
+            - '-c'
+            - 'until nslookup {{ .Release.Name }}-mariadb.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for mydb; sleep 2; done'
+        - name: checkkeycloak
+          image: "{{ .Values.initContainers.curl.image }}:{{ .Values.initContainers.curl.tag }}"
+          command: ['sh', '-c', 'while [ `curl -Lk --write-out "%{http_code}\n" --silent --output /dev/null "{{ .Values.global.keycloak.authServerUrl }}"` -ne 200 ]; do sleep 2; done']
+
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:          
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mariadb://{{ .Release.Name }}-mariadb:{{ .Values.mariadb.primary.service.ports.mysql }}/{{ .Values.mariadb.auth.database }}?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
+            - name: SPRING_DATASOURCE_USERNAME
+              value: {{ .Values.mariadb.auth.username }}
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: {{ .Values.mariadb.auth.password }}
+            - name: SERVER_SERVLET_CONTEXT_PATH
+              value: /{{ include "app.fullname" . }}
+            - name: KEYCLOAK_AUTH-SERVER-URL
+              value: {{ .Values.global.keycloak.authServerUrl }}
+            - name: SERVER_USE_FORWARD_HEADERS 
+              value: "true"
+            - name: SERVER_FORWARD_HEADERS_STRATEGY
+              value: FRAMEWORK
+            {{- with .Values.extraEnv }}
+            {{- tpl . $ | nindent 12 }}
+            {{- end }}              
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /{{ include "app.fullname" . }}/monitoring/health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /{{ include "app.fullname" . }}/monitoring/health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 5
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

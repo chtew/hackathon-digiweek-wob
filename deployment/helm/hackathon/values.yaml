@@ -1,0 +1,69 @@
+global:
+  keycloak:
+    authServerUrl: http://markus-desktop2/cityos-auth
+
+replicaCount: 1
+
+image:
+  repository: docker pull ghcr.io/chtew/hackathon-digiweek-wob
+  #tag: "v1.1.0" # default from Chart.yaml
+  pullPolicy: Always
+
+imagePullSecrets:
+  - name: github-pull-secret
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 8083
+
+serviceAccount:
+  create: false
+autoscaling:
+  enabled: false
+
+initContainers:
+  wait4mariadb:
+    image: busybox
+    tag: latest
+  curl:
+    image: curlimages/curl
+    tag: latest
+
+# add extra environment params to app server
+#extraEnv: |
+#  - name: MY_PARAM
+#    value: value
+
+# adapt if other ingress controller as traefik is used.
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"  
+  hosts:
+    - host: markus-desktop2
+  tls:
+    - secretName: host-tls
+      hosts:
+        - markus-desktop2
+
+mariadb:
+  auth:
+    rootPassword: root
+    database: hackathon
+    username: hackathon
+    password: hackathon
+  primary:
+    service:
+      ports:
+        mysql: 3308
+
+  livenessProbe: |
+    httpGet:
+      path: /cityos-auth/
+      port: http
+    initialDelaySeconds: 0
+    timeoutSeconds: 5
+
