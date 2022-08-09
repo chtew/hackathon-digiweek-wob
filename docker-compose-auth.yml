@@ -10,7 +10,7 @@ services:
     networks:
       - backend
     environment:
-      #SPRING_PROFILES_ACTIVE: dev
+      SPRING_PROFILES_ACTIVE: prod
       SPRING_DATASOURCE_URL: 'jdbc:mariadb://db-hackathon:3306/hackathon?useLegacyDatetimeCode=false&serverTimezone=CET'
       SPRING_DATASOURCE_USERNAME: 'hackathon'
       SPRING_DATASOURCE_PASSWORD: 'hackathon'

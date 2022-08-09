@@ -74,18 +74,6 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /{{ include "app.fullname" . }}/monitoring/health
-              port: http
-            initialDelaySeconds: 30
-            periodSeconds: 5
-          readinessProbe:
-            httpGet:
-              path: /{{ include "app.fullname" . }}/monitoring/health
-              port: http
-            initialDelaySeconds: 30
-            periodSeconds: 5
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
