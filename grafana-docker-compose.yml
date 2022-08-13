@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  grafana:
+    image: grafana/grafana-oss:9.0.2
+    ports:
+      - '3001:3001'
+    networks:
+      - backend
+    volumes:
+      # - grafana-data:/var/lib/grafana
+      #- ./grafana/default.ini:/etc/grafana/grafana.ini
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboard_files
+      - ./grafana/datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml
+      - ./grafana/dashboard_provider.yaml:/etc/grafana/provisioning/dashboards/dashboard_provider.yaml
+    environment:
+      GF_SERVER_HTTP_PORT: 3001
+      GF_RENDERING_SERVER_URL: 'http://renderer:8081/render'
+      GF_RENDERING_CALLBACK_URL: 'http://grafana:3001/'
+      GF_LOG_FILTERS: 'rendering:debug'
+      GF_SECURITY_ADMIN_USER: 'admin'
+      GF_SECURITY_ADMIN_PASSWORD: 'adminadmin'
+      GF_AUTH_DISABLE_LOGIN_FORM: 'true'
+      GF_AUTH_ANONYMOUS_ENABLED: 'true'
+      GF_AUTH_ANONYMOUS_ORG_ROLE: 'Admin'
+      GF_AUTH_DISABLE_LOGIN_FORM: 'true'
+      GF_SECURITY_ALLOW_EMBEDDING: 'true'
+
+  renderer:
+    image: grafana/grafana-image-renderer:latest
+    networks:
+      - backend
+    ports:
+      - 3002:8081
+
+networks:
+  backend:

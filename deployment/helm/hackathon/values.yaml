@@ -1,0 +1,141 @@
+global:
+  keycloak:
+    authServerUrl: http://anett-xmg-fusion-15-xfu15l19/cityos-auth
+    realm: citydashboard
+    resource: citydashboard
+
+replicaCount: 1
+
+image:
+  repository: ghcr.io/chtew/hackathon-digiweek-wob
+  tag: "v2.2.1"
+  pullPolicy: Always
+
+imagePullSecrets:
+  - name: github-pull-secret
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 8081
+
+serviceAccount:
+  create: false
+autoscaling:
+  enabled: false
+
+initContainers:
+  wait4mariadb:
+    image: busybox
+    tag: latest
+  curl:
+    image: curlimages/curl
+    tag: latest
+
+# add extra environment params to app server
+#  extraEnv: |
+#    - name: KEYCLOAK_REALM
+#      value: 'citydashboard'
+#    - name: KEYCLOAK_RESOURCE
+#      value: 'citydashboard'
+
+# adapt if other ingress controller as traefik is used.
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"  
+  hosts:
+    - host: anett-xmg-fusion-15-xfu15l19
+  tls:
+    - secretName: host-tls
+      hosts:
+        - anett-xmg-fusion-15-xfu15l19
+
+  startupScripts:
+    # cli script that reconfigures WildFly
+    contextPath.cli: |
+      embed-server --server-config=standalone-ha.xml --std-out=echo
+      batch
+      {{- if ne .Values.contextPath "auth" }}
+      /subsystem=keycloak-server/:write-attribute(name=web-context,value={{ if eq .Values.contextPath "" }}/{{ else }}{{ .Values.contextPath }}{{ end }})
+      {{- if eq .Values.contextPath "" }}
+      /subsystem=undertow/server=default-server/host=default-host:write-attribute(name=default-web-module,value=keycloak-server.war)
+      {{- end }}
+      {{- end }}
+      run-batch
+      stop-embedded-server
+
+mariadb:
+  auth:
+    rootPassword: root
+    database: hackathon
+    username: hackathon
+    password: hackathon
+  primary:
+    service:
+      ports:
+        mysql: 3308
+
+grafana:
+  ingress:
+    enabled: true
+    hosts:
+      - "anett-xmg-fusion-15-xfu15l19"
+    path: "/grafana"
+  imagerenderer:
+    enabled: true
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+      - name: hackathon-db
+        type: mysql
+        uid: "DUcTla6nk"
+        url: "{{ tpl .Release.Name . }}-mariadb:3308"
+        user: hackathon
+        database: hackathon
+        secureJsonData:
+          password: hackathon
+        editable: true
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+        - name: 'hackathon'
+          folder: ''
+          type: file
+          disableDeletion: true
+          updateIntervalSeconds: 10
+          # <bool> allow updating provisioned dashboards from the UI
+          allowUiUpdates: true
+          options:
+            path: /var/lib/grafana/dashboards/ds1
+            foldersFromFilesStructure: true
+  dashboardsConfigMaps:
+    ds1: "traffic-ds"
+
+  env:
+      GF_SERVER_ROOT_URL: https://anett-xmg-fusion-15-xfu15l19/grafana/
+      GF_SERVER_DOMAIN: anett-xmg-fusion-15-xfu15l19
+      GF_SERVER_SERVE_FROM_SUB_PATH: true
+      GF_SECURITY_ADMIN_USER: 'adminadmin'
+      GF_SECURITY_ADMIN_PASSWORD: 'adminadmin'
+      GF_AUTH_DISABLE_LOGIN_FORM: 'true'
+      GF_AUTH_GENERIC_OAUTH_ENABLED: 'true'
+      GF_AUTH_GENERIC_OAUTH_ALLOW_SIGN_UP: 'true'
+      GF_AUTH_GENERIC_OAUTH_NAME: 'OAuth'
+      GF_AUTH_GENERIC_OAUTH_CLIENT_ID: 'citydashboard'
+      GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH: 'Viewer'
+      GF_AUTH_GENERIC_OAUTH_SCOPES: 'openid profile email'
+      GF_AUTH_GENERIC_OAUTH_TOKEN_URL: 'http://anett-xmg-fusion-15-xfu15l19/cityos-auth/realms/citydashboard/protocol/openid-connect/token'
+      GF_AUTH_GENERIC_OAUTH_AUTH_URL: 'http://anett-xmg-fusion-15-xfu15l19/cityos-auth/realms/citydashboard/protocol/openid-connect/auth'
+      GF_AUTH_GENERIC_OAUTH_API_URL: 'http://anett-xmg-fusion-15-xfu15l19/cityos-auth/realms/citydashboard/protocol/openid-connect/userinfo'
+      GF_AUTH_BASIC_ENABLED: 'false'
+      GF_SECURITY_ALLOW_EMBEDDING: 'true'
+      GF_AUTH_ANONYMOUS_ORG_ROLE: 'Admin'
+      GF_AUTH_ANONYMOUS_ENABLED: 'false'
+
+
+

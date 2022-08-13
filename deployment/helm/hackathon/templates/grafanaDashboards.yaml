@@ -1,0 +1,1415 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: traffic-ds
+  labels:
+    app: {{ template "grafana.name" . }}
+    chart: {{ template "grafana.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  dashboards.json: |
+    {
+      "editable": true,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 0,
+      "id": 1,
+      "iteration": 1657385294113,
+      "links": [],
+      "liveNow": false,
+      "panels": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "DUcTla6nk"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "axisSoftMin": 0,
+                "fillOpacity": 80,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineWidth": 1,
+                "scaleDistribution": {
+                  "type": "linear"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 12,
+            "x": 0,
+            "y": 0
+          },
+          "id": 2,
+          "options": {
+            "barRadius": 0,
+            "barWidth": 0.97,
+            "groupWidth": 0.7,
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom"
+            },
+            "orientation": "auto",
+            "showValue": "auto",
+            "stacking": "none",
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            },
+            "xField": "Time",
+            "xTickLabelRotation": 0,
+            "xTickLabelSpacing": 200
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "mysql",
+                "uid": "DUcTla6nk"
+              },
+              "format": "time_series",
+              "group": [],
+              "metricColumn": "none",
+              "rawQuery": true,
+              "rawSql": "SELECT\n  $__timeGroupAlias(RECORDDATE, \"1d\"),\n  CARCOUNT AS \"MIV\",\n  EXTERNALID\nFROM TRAFFICRECORD INNER JOIN TRAFFICRECORDER on (TRAFFICRECORD.TRAFFICRECORDER_ID = TRAFFICRECORDER.ID)\nWHERE EXTERNALID in ($externalId) and $__timeFilter(RECORDDATE)\nORDER BY time ASC, EXTERNALID ASC",
+              "refId": "A",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "CARCOUNT"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "sum"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "MIV"
+                    ],
+                    "type": "alias"
+                  }
+                ]
+              ],
+              "table": "TRAFFICRECORD",
+              "timeColumn": "RECORDDATE",
+              "timeColumnType": "datetime",
+              "where": []
+            }
+          ],
+          "title": "MIV pro Detektor Vergleich",
+          "type": "barchart"
+        },
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "DUcTla6nk"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 12,
+            "x": 12,
+            "y": 0
+          },
+          "id": 9,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom"
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "mysql",
+                "uid": "DUcTla6nk"
+              },
+              "format": "time_series",
+              "group": [],
+              "metricColumn": "none",
+              "rawQuery": true,
+              "rawSql": "SELECT\n  $__timeGroupAlias(RECORDDATE, \"1d\"),\n  CARCOUNT AS \"MIV\",\n  EXTERNALID\nFROM TRAFFICRECORD INNER JOIN TRAFFICRECORDER on (TRAFFICRECORD.TRAFFICRECORDER_ID = TRAFFICRECORDER.ID)\nWHERE EXTERNALID in ($externalId) and $__timeFilter(RECORDDATE)\nORDER BY time ASC, EXTERNALID ASC",
+              "refId": "A",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "CARCOUNT"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "sum"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "MIV"
+                    ],
+                    "type": "alias"
+                  }
+                ]
+              ],
+              "table": "TRAFFICRECORD",
+              "timeColumn": "RECORDDATE",
+              "timeColumnType": "datetime",
+              "where": []
+            }
+          ],
+          "title": "MIV pro Detektor Vergleich",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "DUcTla6nk"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "axisLabel": "",
+                "axisPlacement": "left",
+                "axisSoftMin": 0,
+                "fillOpacity": 80,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineWidth": 1,
+                "scaleDistribution": {
+                  "type": "linear"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Durchschnitt am Wochenende"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "orange",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Durchschnitt unter der Woche"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "green",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 12,
+            "x": 0,
+            "y": 9
+          },
+          "id": 5,
+          "options": {
+            "barRadius": 0,
+            "barWidth": 0.97,
+            "groupWidth": 0.7,
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom"
+            },
+            "orientation": "horizontal",
+            "showValue": "auto",
+            "stacking": "none",
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            },
+            "xField": "Detektor",
+            "xTickLabelRotation": 0,
+            "xTickLabelSpacing": 0
+          },
+          "pluginVersion": "9.0.2",
+          "targets": [
+            {
+              "datasource": {
+                "type": "mysql",
+                "uid": "DUcTla6nk"
+              },
+              "format": "table",
+              "group": [],
+              "metricColumn": "none",
+              "rawQuery": true,
+              "rawSql": "SELECT\n  Weekend.EXTERNALID as \"Detektor\",\n  NoWeekend.AvgInWeek as \"Durchschnitt unter der Woche\",\n  Weekend.AvgInWeek as \"Durchschnitt am Wochenende\"\nFROM \n (SELECT\n     AVG(CARCOUNT) as \"AvgInWeek\", EXTERNALID\n     FROM TRAFFICRECORD INNER JOIN TRAFFICRECORDER on (TRAFFICRECORD.TRAFFICRECORDER_ID = TRAFFICRECORDER.ID)\n     WHERE \n      EXTERNALID in ($externalId) and \n      WEEKDAY(RECORDDATE) in (5, 6) = 0 and \n      $__timeFilter(RECORDDATE)\n     GROUP BY EXTERNALID\n     ORDER BY EXTERNALID ASC\n ) NoWeekend INNER JOIN\n(SELECT\n    AVG(CARCOUNT) as \"AvgInWeek\", EXTERNALID\n  FROM TRAFFICRECORD INNER JOIN TRAFFICRECORDER on (TRAFFICRECORD.TRAFFICRECORDER_ID = TRAFFICRECORDER.ID)\n  WHERE \n    EXTERNALID in ($externalId) and \n    WEEKDAY(RECORDDATE) in (5, 6) = 1 and \n    $__timeFilter(RECORDDATE)\n  GROUP BY EXTERNALID\n  ORDER BY EXTERNALID ASC\n) Weekend on (Weekend.EXTERNALID = NoWeekend.EXTERNALID)\n\nWHERE Weekend.EXTERNALID in ($externalId)\nGROUP BY Weekend.EXTERNALID\nORDER BY Weekend.EXTERNALID ASC",
+              "refId": "A",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "CARCOUNT"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "sum"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "MIV"
+                    ],
+                    "type": "alias"
+                  }
+                ]
+              ],
+              "table": "TRAFFICRECORD",
+              "timeColumn": "RECORDDATE",
+              "timeColumnType": "datetime",
+              "where": []
+            }
+          ],
+          "title": "Durschnittliche MIV am Wochenende und unter der Woche pro Detektor",
+          "type": "barchart"
+        },
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "DUcTla6nk"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "axisSoftMin": 0,
+                "fillOpacity": 80,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineWidth": 1,
+                "scaleDistribution": {
+                  "type": "linear"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 12,
+            "x": 12,
+            "y": 9
+          },
+          "id": 8,
+          "options": {
+            "barRadius": 0,
+            "barWidth": 0.97,
+            "groupWidth": 0.7,
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom"
+            },
+            "orientation": "horizontal",
+            "showValue": "auto",
+            "stacking": "none",
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            },
+            "xField": "EXTERNALID",
+            "xTickLabelRotation": 0,
+            "xTickLabelSpacing": 0
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "mysql",
+                "uid": "DUcTla6nk"
+              },
+              "format": "table",
+              "group": [],
+              "metricColumn": "none",
+              "rawQuery": true,
+              "rawSql": "SELECT\n  AVG(CARCOUNT) AS \"Durchschnitt MIV\",\n  EXTERNALID\nFROM TRAFFICRECORD INNER JOIN TRAFFICRECORDER on (TRAFFICRECORD.TRAFFICRECORDER_ID = TRAFFICRECORDER.ID)\nWHERE EXTERNALID in ($externalId) and $__timeFilter(RECORDDATE)\nGROUP BY EXTERNALID\nORDER BY EXTERNALID ASC",
+              "refId": "A",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "CARCOUNT"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "sum"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "MIV"
+                    ],
+                    "type": "alias"
+                  }
+                ]
+              ],
+              "table": "TRAFFICRECORD",
+              "timeColumn": "RECORDDATE",
+              "timeColumnType": "datetime",
+              "where": []
+            }
+          ],
+          "title": "Durchschnittliche MIV pro Detektor im Zeitraum",
+          "type": "barchart"
+        },
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "DUcTla6nk"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "scaleDistribution": {
+                  "type": "linear"
+                }
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 12,
+            "x": 0,
+            "y": 18
+          },
+          "id": 3,
+          "options": {
+            "calculate": false,
+            "calculation": {
+              "yBuckets": {
+                "scale": {
+                  "type": "linear"
+                }
+              }
+            },
+            "cellGap": 1,
+            "color": {
+              "exponent": 0.5,
+              "fill": "dark-orange",
+              "mode": "scheme",
+              "scale": "exponential",
+              "scheme": "Oranges",
+              "steps": 64
+            },
+            "exemplars": {
+              "color": "rgba(255,0,255,0.7)"
+            },
+            "filterValues": {
+              "le": 1e-9
+            },
+            "legend": {
+              "show": true
+            },
+            "rowsFrame": {
+              "layout": "auto"
+            },
+            "tooltip": {
+              "show": true,
+              "yHistogram": false
+            },
+            "yAxis": {
+              "axisPlacement": "left",
+              "reverse": false
+            }
+          },
+          "pluginVersion": "9.0.2",
+          "targets": [
+            {
+              "datasource": {
+                "type": "mysql",
+                "uid": "DUcTla6nk"
+              },
+              "format": "time_series",
+              "group": [],
+              "metricColumn": "none",
+              "rawQuery": true,
+              "rawSql": "SELECT\n  $__timeGroupAlias(RECORDDATE, \"24h\"),\n  CARCOUNT AS \"MIV\",\n  EXTERNALID\nFROM TRAFFICRECORD INNER JOIN TRAFFICRECORDER on (TRAFFICRECORD.TRAFFICRECORDER_ID = TRAFFICRECORDER.ID)\nWHERE EXTERNALID in ($externalId) and $__timeFilter(RECORDDATE)\nORDER BY time ASC, EXTERNALID ASC",
+              "refId": "A",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "CARCOUNT"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "sum"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "MIV"
+                    ],
+                    "type": "alias"
+                  }
+                ]
+              ],
+              "table": "TRAFFICRECORD",
+              "timeColumn": "RECORDDATE",
+              "timeColumnType": "datetime",
+              "where": []
+            }
+          ],
+          "title": "Straßenauslastung im Zeitraum",
+          "type": "heatmap-new"
+        },
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "DUcTla6nk"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "scaleDistribution": {
+                  "type": "linear"
+                }
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 12,
+            "x": 12,
+            "y": 18
+          },
+          "id": 10,
+          "options": {
+            "calculate": false,
+            "calculation": {
+              "yBuckets": {
+                "scale": {
+                  "type": "linear"
+                }
+              }
+            },
+            "cellGap": 1,
+            "color": {
+              "exponent": 0.5,
+              "fill": "dark-orange",
+              "max": 1,
+              "min": 0,
+              "mode": "scheme",
+              "scale": "exponential",
+              "scheme": "Oranges",
+              "steps": 64
+            },
+            "exemplars": {
+              "color": "rgba(255,0,255,0.7)"
+            },
+            "filterValues": {
+              "le": 1e-9
+            },
+            "legend": {
+              "show": true
+            },
+            "rowsFrame": {
+              "layout": "auto"
+            },
+            "tooltip": {
+              "show": true,
+              "yHistogram": false
+            },
+            "yAxis": {
+              "axisPlacement": "left",
+              "reverse": false
+            }
+          },
+          "pluginVersion": "9.0.2",
+          "targets": [
+            {
+              "datasource": {
+                "type": "mysql",
+                "uid": "DUcTla6nk"
+              },
+              "format": "time_series",
+              "group": [],
+              "metricColumn": "none",
+              "rawQuery": true,
+              "rawSql": "SELECT\n  $__timeGroupAlias(RECORDDATE, \"24h\"),\n  CARCOUNT / MAXCOUNT AS \"MIV\",\n  EXTERNALID\nFROM TRAFFICRECORD INNER JOIN (\n  TRAFFICRECORDER\n    INNER JOIN (\n      SELECT MAX(CARCOUNT) as MAXCOUNT, TRAFFICRECORDER.ID \n      FROM TRAFFICRECORD INNER JOIN TRAFFICRECORDER on (TRAFFICRECORD.TRAFFICRECORDER_ID = TRAFFICRECORDER.ID)\n      GROUP BY ID\n    ) minMax on minMax.ID = TRAFFICRECORDER.ID) on (TRAFFICRECORD.TRAFFICRECORDER_ID = TRAFFICRECORDER.ID)\nWHERE EXTERNALID in ($externalId) and $__timeFilter(RECORDDATE)\nORDER BY time ASC, EXTERNALID ASC",
+              "refId": "A",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "CARCOUNT"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "sum"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "MIV"
+                    ],
+                    "type": "alias"
+                  }
+                ]
+              ],
+              "table": "TRAFFICRECORD",
+              "timeColumn": "RECORDDATE",
+              "timeColumnType": "datetime",
+              "where": []
+            }
+          ],
+          "title": "Relative Straßenauslastung im Zeitraum",
+          "type": "heatmap-new"
+        },
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "DUcTla6nk"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "axisSoftMin": 0,
+                "fillOpacity": 80,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineWidth": 1,
+                "scaleDistribution": {
+                  "type": "linear"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Time"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "time:dddd"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 12,
+            "x": 12,
+            "y": 27
+          },
+          "id": 4,
+          "options": {
+            "barRadius": 0,
+            "barWidth": 0.97,
+            "groupWidth": 0.7,
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom"
+            },
+            "orientation": "auto",
+            "showValue": "auto",
+            "stacking": "none",
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            },
+            "xTickLabelRotation": 0,
+            "xTickLabelSpacing": 0
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "mysql",
+                "uid": "DUcTla6nk"
+              },
+              "format": "time_series",
+              "group": [],
+              "metricColumn": "none",
+              "rawQuery": true,
+              "rawSql": "SELECT\n  AVG(CARCOUNT) AS \"Durchschnitt MIV\",\n  (WEEKDAY(RECORDDATE) * 1000 * 60 * 60 * 24 + 4 * 1000 * 24 * 60 * 60 ) AS \"time\", -- abusing date format so that monday (0) is actually a monday\n  EXTERNALID\nFROM TRAFFICRECORD INNER JOIN TRAFFICRECORDER on (TRAFFICRECORD.TRAFFICRECORDER_ID = TRAFFICRECORDER.ID)\nWHERE EXTERNALID in ($externalId) and $__timeFilter(RECORDDATE)\nGROUP BY time, EXTERNALID\nORDER BY time ASC, EXTERNALID ASC",
+              "refId": "A",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "CARCOUNT"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "sum"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "MIV"
+                    ],
+                    "type": "alias"
+                  }
+                ]
+              ],
+              "table": "TRAFFICRECORD",
+              "timeColumn": "RECORDDATE",
+              "timeColumnType": "datetime",
+              "where": []
+            }
+          ],
+          "title": "Durschnittliche MIV pro Wochentag pro Detektor",
+          "type": "barchart"
+        },
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "DUcTla6nk"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "axisLabel": "",
+                "axisPlacement": "left",
+                "axisSoftMin": 0,
+                "fillOpacity": 80,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineWidth": 1,
+                "scaleDistribution": {
+                  "type": "linear"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Durchschnitt am Wochenende"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "orange",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Durchschnitt unter der Woche"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "green",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Durchschnitt außerhalb WU"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "green",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Durchschnitt im WU"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "orange",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 12,
+            "x": 12,
+            "y": 36
+          },
+          "id": 7,
+          "options": {
+            "barRadius": 0,
+            "barWidth": 0.97,
+            "groupWidth": 0.7,
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom"
+            },
+            "orientation": "horizontal",
+            "showValue": "auto",
+            "stacking": "none",
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            },
+            "xField": "Richtung",
+            "xTickLabelRotation": 0,
+            "xTickLabelSpacing": 0
+          },
+          "pluginVersion": "9.0.2",
+          "targets": [
+            {
+              "datasource": {
+                "type": "mysql",
+                "uid": "DUcTla6nk"
+              },
+              "format": "table",
+              "group": [],
+              "metricColumn": "none",
+              "rawQuery": true,
+              "rawSql": "SELECT\n  NoWeekend.CITYDIRECTION as \"Richtung\",\n  NoWeekend.NotWU as \"Durchschnitt außerhalb WU\",\n  Weekend.WU as \"Durchschnitt im WU\"\nFROM \n (SELECT\n     AVG(CARCOUNT) as \"NotWU\", EXTERNALID, CITYDIRECTION\n     FROM TRAFFICRECORD INNER JOIN TRAFFICRECORDER on (TRAFFICRECORD.TRAFFICRECORDER_ID = TRAFFICRECORDER.ID)\n     WHERE \n      EXTERNALID in ($externalId) and \n      PLANTHOLIDAY = 0\n     GROUP BY EXTERNALID\n     ORDER BY EXTERNALID ASC\n ) NoWeekend INNER JOIN\n(SELECT\n    AVG(CARCOUNT) as \"WU\", EXTERNALID\n  FROM TRAFFICRECORD INNER JOIN TRAFFICRECORDER on (TRAFFICRECORD.TRAFFICRECORDER_ID = TRAFFICRECORDER.ID)\n  WHERE \n    EXTERNALID in ($externalId) and \n    PLANTHOLIDAY = 1\n  GROUP BY EXTERNALID\n  ORDER BY EXTERNALID ASC\n) Weekend on (Weekend.EXTERNALID = NoWeekend.EXTERNALID)\n\nWHERE Weekend.EXTERNALID in ($externalId)\nGROUP BY NoWeekend.CITYDIRECTION\nORDER BY NoWeekend.CITYDIRECTION ASC",
+              "refId": "A",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "CARCOUNT"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "sum"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "MIV"
+                    ],
+                    "type": "alias"
+                  }
+                ]
+              ],
+              "table": "TRAFFICRECORD",
+              "timeColumn": "RECORDDATE",
+              "timeColumnType": "datetime",
+              "where": []
+            }
+          ],
+          "title": "Ein-/Ausfahrten MIV während und außerhalb WU (Detektor gefiltert)",
+          "type": "barchart"
+        },
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "DUcTla6nk"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "axisLabel": "",
+                "axisPlacement": "left",
+                "axisSoftMin": 0,
+                "fillOpacity": 80,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineWidth": 1,
+                "scaleDistribution": {
+                  "type": "linear"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Durchschnitt am Wochenende"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "orange",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Durchschnitt unter der Woche"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "green",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Durchschnitt außerhalb WU"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "green",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Durchschnitt im WU"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "orange",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 12,
+            "x": 12,
+            "y": 45
+          },
+          "id": 6,
+          "options": {
+            "barRadius": 0,
+            "barWidth": 0.97,
+            "groupWidth": 0.7,
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom"
+            },
+            "orientation": "horizontal",
+            "showValue": "auto",
+            "stacking": "none",
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            },
+            "xField": "Detektor",
+            "xTickLabelRotation": 0,
+            "xTickLabelSpacing": 0
+          },
+          "pluginVersion": "9.0.2",
+          "targets": [
+            {
+              "datasource": {
+                "type": "mysql",
+                "uid": "DUcTla6nk"
+              },
+              "format": "table",
+              "group": [],
+              "metricColumn": "none",
+              "rawQuery": true,
+              "rawSql": "SELECT\n  Weekend.EXTERNALID as \"Detektor\",\n  NoWeekend.NotHoliday as \"Durchschnitt außerhalb WU\",\n  Weekend.Holiday as \"Durchschnitt im WU\"\nFROM \n (SELECT\n     AVG(CARCOUNT) as \"NotHoliday\", EXTERNALID\n     FROM TRAFFICRECORD INNER JOIN TRAFFICRECORDER on (TRAFFICRECORD.TRAFFICRECORDER_ID = TRAFFICRECORDER.ID)\n     WHERE \n      EXTERNALID in ($externalId) and \n      PLANTHOLIDAY = 0\n     GROUP BY EXTERNALID\n     ORDER BY EXTERNALID ASC\n ) NoWeekend INNER JOIN\n(SELECT\n    AVG(CARCOUNT) as \"Holiday\", EXTERNALID\n  FROM TRAFFICRECORD INNER JOIN TRAFFICRECORDER on (TRAFFICRECORD.TRAFFICRECORDER_ID = TRAFFICRECORDER.ID)\n  WHERE \n    EXTERNALID in ($externalId) and \n    PLANTHOLIDAY = 1\n  GROUP BY EXTERNALID\n  ORDER BY EXTERNALID ASC\n) Weekend on (Weekend.EXTERNALID = NoWeekend.EXTERNALID)\n\nWHERE Weekend.EXTERNALID in ($externalId)\nGROUP BY Weekend.EXTERNALID\nORDER BY Weekend.EXTERNALID ASC",
+              "refId": "A",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "CARCOUNT"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "sum"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "MIV"
+                    ],
+                    "type": "alias"
+                  }
+                ]
+              ],
+              "table": "TRAFFICRECORD",
+              "timeColumn": "RECORDDATE",
+              "timeColumnType": "datetime",
+              "where": []
+            }
+          ],
+          "title": "Durchschnittliche MIV (Gesamtvergleich WU/kein WU)",
+          "type": "barchart"
+        }
+      ],
+      "refresh": false,
+      "schemaVersion": 36,
+      "style": "dark",
+      "tags": [],
+      "templating": {
+        "list": [
+          {
+            "current": {
+              "selected": true,
+              "text": [
+                "216_Z1A",
+                "216_Z2A",
+                "216_Z2C",
+                "216_Z3A",
+                "236_Z1A",
+                "236_Z2",
+                "236_Z3",
+                "236_Z4",
+                "236_Z5",
+                "236_Z6A",
+                "236_Z7A",
+                "301_Z1A",
+                "301_Z1B",
+                "302_Z1A",
+                "302_Z1B",
+                "302_Z2A",
+                "302_Z2B",
+                "303_Z1A",
+                "303_Z1B",
+                "303_Z2A",
+                "303_Z2B",
+                "310_Z1A",
+                "310_Z1C",
+                "310_Z2A",
+                "310_Z2C",
+                "310_Z3A",
+                "310_Z3C",
+                "310_Z4A",
+                "310_Z4C",
+                "310_Z4E",
+                "317_Z1A",
+                "317_Z2",
+                "317_Z3A",
+                "317_Z3C",
+                "317_Z4A",
+                "317_Z4C",
+                "352_Z1A",
+                "352_Z2A",
+                "352_Z3A",
+                "352_Z4A",
+                "357_Z1A",
+                "357_Z2A",
+                "357_Z3A",
+                "401_Z1A",
+                "401_Z2A",
+                "401_Z3A",
+                "401_Z4A",
+                "401_Z5A",
+                "401_Z6A",
+                "404_Z1A",
+                "404_Z1C",
+                "405_Z1A",
+                "405_Z1B",
+                "405_Z2A",
+                "405_Z2C",
+                "405_Z2E",
+                "405_Z3A",
+                "405_Z3C",
+                "405_Z5A",
+                "405_Z6A",
+                "405_Z6C",
+                "405_Z7A",
+                "405_Z7C",
+                "407_Z1A",
+                "407_Z2A",
+                "407_Z3A",
+                "407_Z4A",
+                "407_Z4C",
+                "408_Z1A",
+                "408_Z1C",
+                "408_Z2A",
+                "408_Z2C",
+                "408_Z3A",
+                "408_Z4A",
+                "420_Z1",
+                "420_Z2",
+                "420_Z3A",
+                "420_Z4A",
+                "420_Z5A",
+                "420_Z6A",
+                "420_Z7A",
+                "421_Z1A"
+              ],
+              "value": [
+                "216_Z1A",
+                "216_Z2A",
+                "216_Z2C",
+                "216_Z3A",
+                "236_Z1A",
+                "236_Z2",
+                "236_Z3",
+                "236_Z4",
+                "236_Z5",
+                "236_Z6A",
+                "236_Z7A",
+                "301_Z1A",
+                "301_Z1B",
+                "302_Z1A",
+                "302_Z1B",
+                "302_Z2A",
+                "302_Z2B",
+                "303_Z1A",
+                "303_Z1B",
+                "303_Z2A",
+                "303_Z2B",
+                "310_Z1A",
+                "310_Z1C",
+                "310_Z2A",
+                "310_Z2C",
+                "310_Z3A",
+                "310_Z3C",
+                "310_Z4A",
+                "310_Z4C",
+                "310_Z4E",
+                "317_Z1A",
+                "317_Z2",
+                "317_Z3A",
+                "317_Z3C",
+                "317_Z4A",
+                "317_Z4C",
+                "352_Z1A",
+                "352_Z2A",
+                "352_Z3A",
+                "352_Z4A",
+                "357_Z1A",
+                "357_Z2A",
+                "357_Z3A",
+                "401_Z1A",
+                "401_Z2A",
+                "401_Z3A",
+                "401_Z4A",
+                "401_Z5A",
+                "401_Z6A",
+                "404_Z1A",
+                "404_Z1C",
+                "405_Z1A",
+                "405_Z1B",
+                "405_Z2A",
+                "405_Z2C",
+                "405_Z2E",
+                "405_Z3A",
+                "405_Z3C",
+                "405_Z5A",
+                "405_Z6A",
+                "405_Z6C",
+                "405_Z7A",
+                "405_Z7C",
+                "407_Z1A",
+                "407_Z2A",
+                "407_Z3A",
+                "407_Z4A",
+                "407_Z4C",
+                "408_Z1A",
+                "408_Z1C",
+                "408_Z2A",
+                "408_Z2C",
+                "408_Z3A",
+                "408_Z4A",
+                "420_Z1",
+                "420_Z2",
+                "420_Z3A",
+                "420_Z4A",
+                "420_Z5A",
+                "420_Z6A",
+                "420_Z7A",
+                "421_Z1A"
+              ]
+            },
+            "datasource": {
+              "type": "mysql",
+              "uid": "DUcTla6nk"
+            },
+            "definition": "SELECT EXTERNALID FROM TRAFFICRECORDER",
+            "description": "",
+            "hide": 0,
+            "includeAll": false,
+            "label": "DetektorPrimary",
+            "multi": true,
+            "name": "externalId",
+            "options": [],
+            "query": "SELECT EXTERNALID FROM TRAFFICRECORDER",
+            "refresh": 2,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 1,
+            "type": "query"
+          }
+        ]
+      },
+      "time": {
+        "from": "2019-06-30T21:59:59.000Z",
+        "to": "2020-06-14T21:59:59.000Z"
+      },
+      "timepicker": {},
+      "timezone": "",
+      "title": "MIV pro Rekorder",
+      "uid": "RY0Euae7z",
+      "version": 31,
+      "weekStart": ""
+    }

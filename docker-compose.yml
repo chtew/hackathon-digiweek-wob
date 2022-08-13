@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
 
-  app:
+  app-traffic:
     build: .
     image: hackathon-app
     ports:
@@ -10,17 +10,18 @@ services:
     networks:
       - backend
     environment:
-      SPRING_PROFILES_ACTIVE: dev
-      SPRING_DATASOURCE_URL: jdbc:mariadb://db-hackathon:3306/hackathon?useLegacyDatetimeCode=false&serverTimezone=CET
-      SPRING_DATASOURCE_USERNAME: hackathon
-      SPRING_DATASOURCE_PASSWORD: hackathon
+      SPRING_PROFILES_ACTIVE: 'dev'
+      SPRING_DATASOURCE_URL: 'jdbc:mariadb://db-hackathon:3306/hackathon?useLegacyDatetimeCode=false&serverTimezone=CET'
+      SPRING_DATASOURCE_USERNAME: 'hackathon'
+      SPRING_DATASOURCE_PASSWORD: 'hackathon'
+      ALLOWEDORIGINS: "http://localhost:8080,http://localhost:8081"
     depends_on:
       db-hackathon:
         condition: service_healthy
   grafana:
     image: grafana/grafana-oss:9.0.2
     ports:
-      - 3001:3001
+      - '3001:3001'
     networks:
       - backend
     volumes:
@@ -31,16 +32,16 @@ services:
       - ./grafana/dashboard_provider.yaml:/etc/grafana/provisioning/dashboards/dashboard_provider.yaml
     environment:
       GF_SERVER_HTTP_PORT: 3001
-      GF_RENDERING_SERVER_URL: http://renderer:8081/render
-      GF_RENDERING_CALLBACK_URL: http://grafana:3001/
-      GF_LOG_FILTERS: rendering:debug
-      GF_SECURITY_ADMIN_USER: admin
-      GF_SECURITY_ADMIN_PASSWORD: adminadmin
-      GF_AUTH_DISABLE_LOGIN_FORM: true
-      GF_AUTH_ANONYMOUS_ENABLED: "true"
-      GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
-      GF_AUTH_DISABLE_LOGIN_FORM: "true"
-      GF_SECURITY_ALLOW_EMBEDDING: true
+      GF_RENDERING_SERVER_URL: 'http://renderer:8081/render'
+      GF_RENDERING_CALLBACK_URL: 'http://grafana:3001/'
+      GF_LOG_FILTERS: 'rendering:debug'
+      GF_SECURITY_ADMIN_USER: 'admin'
+      GF_SECURITY_ADMIN_PASSWORD: 'adminadmin'
+      GF_AUTH_DISABLE_LOGIN_FORM: 'true'
+      GF_AUTH_ANONYMOUS_ENABLED: 'true'
+      GF_AUTH_ANONYMOUS_ORG_ROLE: 'Admin'
+      GF_AUTH_DISABLE_LOGIN_FORM: 'true'
+      GF_SECURITY_ALLOW_EMBEDDING: 'true'
     depends_on:
       db-hackathon:
         condition: service_healthy
