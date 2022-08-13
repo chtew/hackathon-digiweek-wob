@@ -2,11 +2,11 @@ version: '3.8'
 
 services:
 
-  app:
+  app-traffic:
     build: .
     image: hackathon-app
     ports:
-      - '8083:8081'
+      - 8083:8081
     networks:
       - backend
     environment:
@@ -14,6 +14,7 @@ services:
       SPRING_DATASOURCE_URL: 'jdbc:mariadb://db-hackathon:3306/hackathon?useLegacyDatetimeCode=false&serverTimezone=CET'
       SPRING_DATASOURCE_USERNAME: 'hackathon'
       SPRING_DATASOURCE_PASSWORD: 'hackathon'
+      ALLOWEDORIGINS: "http://localhost:8080,http://localhost:8081"
     depends_on:
       db-hackathon:
         condition: service_healthy
