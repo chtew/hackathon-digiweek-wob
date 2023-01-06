@@ -11,13 +11,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import java.time.ZonedDateTime;
-import de.digiweek.persistence.serializer.ZonedDateTimeSerializer;
-import de.digiweek.persistence.serializer.ZonedDateTimeDeserializer;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import javax.persistence.CascadeType;
-
 /**
  * TrafficRecorder Entity class
  */
@@ -30,31 +23,24 @@ public class TrafficRecorderEntity extends AbstractEntity<Long> {
     @Column(name = "externalid")
     private String externalId;
 
-
     @Enumerated(EnumType.STRING)
     @Column(name = "citydirection")
     private CityDirection cityDirection;
 
-
     @Column(name = "neighbor")
     private String neighbor;
-
 
     @Column(name = "specialty")
     private String specialty;
 
-
     @Column(name = "location")
     private String location;
-
 
     @Column(name = "latitude")
     private BigDecimal latitude;
 
-
     @Column(name = "longitude")
     private BigDecimal longitude;
-
 
     // entity relations
     @JsonFilter("filterId")

@@ -1,22 +1,15 @@
 package de.digiweek.persistence.entity;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
 import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import java.time.ZonedDateTime;
-import de.digiweek.persistence.serializer.ZonedDateTimeSerializer;
-import de.digiweek.persistence.serializer.ZonedDateTimeDeserializer;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import javax.persistence.CascadeType;
+import com.fasterxml.jackson.annotation.JsonFilter;
 
 /**
  * TrafficRecord Entity class
@@ -27,35 +20,26 @@ import javax.persistence.CascadeType;
 public class TrafficRecordEntity extends AbstractEntity<Long> {
 
     // entity fields
-    @Column(name="recorddate")
-    @JsonSerialize(using = ZonedDateTimeSerializer.class)
-    @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
-    private ZonedDateTime recordDate;
-
+    @Column(name = "recorddate")
+    private Date recordDate;
 
     @Column(name = "weekday")
     private Integer weekday;
 
-
     @Column(name = "holiday")
     private Boolean holiday;
-
 
     @Column(name = "vacationlowersaxony")
     private Boolean vacationLowerSaxony;
 
-
     @Column(name = "weekend")
     private Boolean weekend;
-
 
     @Column(name = "plantholiday")
     private Boolean plantHoliday;
 
-
     @Column(name = "carcount")
     private Integer carCount;
-
 
     // entity relations
     @JsonFilter("filterId")
@@ -64,11 +48,11 @@ public class TrafficRecordEntity extends AbstractEntity<Long> {
     private TrafficRecorderEntity trafficRecorder;
 
     // entity fields getters and setters
-    public ZonedDateTime getRecordDate() {
+    public Date getRecordDate() {
         return recordDate;
     }
 
-    public void setRecordDate(ZonedDateTime recordDate) {
+    public void setRecordDate(Date recordDate) {
         this.recordDate = recordDate;
     }
 
