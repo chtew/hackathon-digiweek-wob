@@ -1,0 +1,44 @@
+version: "3.9"
+services:
+  postgres:
+    container_name: hackathon-db
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: hackathon
+      POSTGRES_USER: hackathon
+      POSTGRES_PASSWORD: hackathon
+      PGDATA: /var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U hackathon'] # <<<---
+      interval: 5s
+      timeout: 60s
+      retries: 30
+    volumes:
+      - hackathon-db:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    networks:
+      - backend
+    restart: unless-stopped
+  
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+       - hackathon-pgadmin:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    networks:
+      - backend
+    restart: unless-stopped
+
+networks:
+  backend:
+
+volumes:
+  hackathon-db:
+  hackathon-pgadmin:

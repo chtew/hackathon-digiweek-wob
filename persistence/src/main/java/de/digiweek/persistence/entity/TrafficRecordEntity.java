@@ -1,61 +1,74 @@
 package de.digiweek.persistence.entity;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
-
 import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import java.time.ZonedDateTime;
+import de.digiweek.persistence.serializer.ZonedDateTimeSerializer;
+import de.digiweek.persistence.serializer.ZonedDateTimeDeserializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import javax.persistence.CascadeType;
 
 /**
  * TrafficRecord Entity class
  */
+@XmlRootElement
 @Entity
-@Table(name = "TRAFFICRECORD")
+@Table(name = "trafficrecord")
 public class TrafficRecordEntity extends AbstractEntity<Long> {
 
-    // date
     // entity fields
-    @Column(name = "RECORDDATE")
-    private Date recordDate;
+    @Column(name="recorddate")
+    @JsonSerialize(using = ZonedDateTimeSerializer.class)
+    @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
+    private ZonedDateTime recordDate;
 
-    @Column(name = "WEEKDAY")
+
+    @Column(name = "weekday")
     private Integer weekday;
 
-    // bool
-    @Column(name = "WEEKEND")
-    private Boolean weekend;
 
-    // bool
-    @Column(name = "HOLIDAY")
+    @Column(name = "holiday")
     private Boolean holiday;
 
-    // bool
-    @Column(name = "VACATIONLOWERSAXONY")
+
+    @Column(name = "vacationlowersaxony")
     private Boolean vacationLowerSaxony;
 
-    // bool
-    @Column(name = "PLANTHOLIDAY")
+
+    @Column(name = "weekend")
+    private Boolean weekend;
+
+
+    @Column(name = "plantholiday")
     private Boolean plantHoliday;
 
-    @Column(name = "CARCOUNT")
+
+    @Column(name = "carcount")
     private Integer carCount;
+
 
     // entity relations
     @JsonFilter("filterId")
     @ManyToOne
-    @JoinColumn(name = "TRAFFICRECORDER_ID")
+    @JoinColumn(name = "trafficrecorder_id")
     private TrafficRecorderEntity trafficRecorder;
 
     // entity fields getters and setters
-    public Date getRecordDate() {
+    public ZonedDateTime getRecordDate() {
         return recordDate;
     }
 
-    public void setRecordDate(Date recordDate) {
+    public void setRecordDate(ZonedDateTime recordDate) {
         this.recordDate = recordDate;
     }
 
@@ -65,14 +78,6 @@ public class TrafficRecordEntity extends AbstractEntity<Long> {
 
     public void setWeekday(Integer weekday) {
         this.weekday = weekday;
-    }
-
-    public Boolean getWeekend() {
-        return weekend;
-    }
-
-    public void setWeekend(Boolean weekend) {
-        this.weekend = weekend;
     }
 
     public Boolean getHoliday() {
@@ -89,6 +94,14 @@ public class TrafficRecordEntity extends AbstractEntity<Long> {
 
     public void setVacationLowerSaxony(Boolean vacationLowerSaxony) {
         this.vacationLowerSaxony = vacationLowerSaxony;
+    }
+
+    public Boolean getWeekend() {
+        return weekend;
+    }
+
+    public void setWeekend(Boolean weekend) {
+        this.weekend = weekend;
     }
 
     public Boolean getPlantHoliday() {

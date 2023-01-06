@@ -9,39 +9,55 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import java.time.ZonedDateTime;
+import de.digiweek.persistence.serializer.ZonedDateTimeSerializer;
+import de.digiweek.persistence.serializer.ZonedDateTimeDeserializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import javax.persistence.CascadeType;
 
 /**
  * TrafficRecorder Entity class
  */
+@XmlRootElement
 @Entity
-@Table(name = "TRAFFICRECORDER")
+@Table(name = "trafficrecorder")
 public class TrafficRecorderEntity extends AbstractEntity<Long> {
 
     // entity fields
-    @Column(name = "EXTERNALID")
+    @Column(name = "externalid")
     private String externalId;
 
+
     @Enumerated(EnumType.STRING)
-    @Column(name = "CITYDIRECTION")
+    @Column(name = "citydirection")
     private CityDirection cityDirection;
 
-    @Column(name = "NEIGHBOR")
+
+    @Column(name = "neighbor")
     private String neighbor;
 
-    @Column(name = "SPECIALTY")
+
+    @Column(name = "specialty")
     private String specialty;
 
-    @Column(name = "LOCATION")
+
+    @Column(name = "location")
     private String location;
 
-    @Column(name = "LATITUDE")
+
+    @Column(name = "latitude")
     private BigDecimal latitude;
 
-    @Column(name = "LONGITUDE")
+
+    @Column(name = "longitude")
     private BigDecimal longitude;
 
+
     // entity relations
-    @JsonFilter("filterIdDayCount")
+    @JsonFilter("filterId")
     @OneToMany(mappedBy = "trafficRecorder")
     private Set<TrafficRecordEntity> trafficRecord;
 
