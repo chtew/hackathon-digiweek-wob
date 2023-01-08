@@ -28,8 +28,8 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
-        - name: wait4mariadb
-          image: "{{ .Values.initContainers.wait4mariadb.image }}:{{ .Values.initContainers.wait4mariadb.tag }}"
+        - name: wait4postgres
+          image: "{{ .Values.initContainers.wait4postgres.image }}:{{ .Values.initContainers.wait4postgres.tag }}"
           resources:
             {{- toYaml .Values.initContainers.resources | nindent 12 }}
           securityContext:
@@ -37,7 +37,7 @@ spec:
           command: 
             - 'sh'
             - '-c'
-            - 'until nslookup {{ .Release.Name }}-mariadb.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for mydb; sleep 2; done'
+            - 'until nslookup {{ .Release.Name }}-postgres.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for mydb; sleep 2; done'
         - name: checkkeycloak
           image: "{{ .Values.initContainers.curl.image }}:{{ .Values.initContainers.curl.tag }}"
           command: ['sh', '-c', 'while [ `curl -Lk --write-out "%{http_code}\n" --silent --output /dev/null "{{ .Values.global.keycloak.authServerUrl }}"` -ne 200 ]; do sleep 2; done']
@@ -50,7 +50,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:          
             - name: SPRING_DATASOURCE_URL
-              value: jdbc:mariadb://{{ .Release.Name }}-mariadb:{{ .Values.mariadb.primary.service.ports.mysql }}/{{ .Values.mariadb.auth.database }}?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
+              value: jdbc:postgresql://{{ .Release.Name }}-postgres:{{ .Values.mariadb.primary.service.ports.postgresql }}/{{ .Values.postgresql.auth.database }}?useLegacyDatetimeCode=false&serverTimezone=CET
             - name: SPRING_DATASOURCE_USERNAME
               value: {{ .Values.mariadb.auth.username }}
             - name: SPRING_DATASOURCE_PASSWORD

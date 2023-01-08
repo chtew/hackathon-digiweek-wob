@@ -26,7 +26,7 @@ autoscaling:
   enabled: false
 
 initContainers:
-  wait4mariadb:
+  wait4postgres:
     image: busybox
     tag: latest
   curl:
@@ -67,16 +67,16 @@ ingress:
       run-batch
       stop-embedded-server
 
-mariadb:
+postgresql:
   auth:
-    rootPassword: root
+    postgresPassword: root
     database: hackathon
     username: hackathon
     password: hackathon
   primary:
     service:
       ports:
-        mysql: 3308
+        postgresql: 5432
 
 grafana:
   ingress:
@@ -91,9 +91,9 @@ grafana:
       apiVersion: 1
       datasources:
       - name: hackathon-db
-        type: mysql
+        type: postgresql
         uid: "DUcTla6nk"
-        url: "{{ tpl .Release.Name . }}-mariadb:3308"
+        url: "{{ tpl .Release.Name . }}-postgres:5432"
         user: hackathon
         database: hackathon
         secureJsonData:

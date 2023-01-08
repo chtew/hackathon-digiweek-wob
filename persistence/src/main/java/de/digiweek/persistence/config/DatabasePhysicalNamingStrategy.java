@@ -13,7 +13,7 @@ public class DatabasePhysicalNamingStrategy implements PhysicalNamingStrategy {
 
     @Override
     public Identifier toPhysicalColumnName(final Identifier identifier, final JdbcEnvironment jdbcEnv) {
-        return toUpperSnakeCase(identifier);
+        return toLowerSnakeCase(identifier);
     }
 
     @Override
@@ -23,20 +23,20 @@ public class DatabasePhysicalNamingStrategy implements PhysicalNamingStrategy {
 
     @Override
     public Identifier toPhysicalSequenceName(final Identifier identifier, final JdbcEnvironment jdbcEnv) {
-        return toUpperSnakeCase(identifier);
+        return toLowerSnakeCase(identifier);
     }
 
     @Override
     public Identifier toPhysicalTableName(final Identifier identifier, final JdbcEnvironment jdbcEnv) {
-        return toUpperSnakeCase(identifier);
+        return toLowerSnakeCase(identifier);
     }
 
-    private Identifier toUpperSnakeCase(final Identifier identifier) {
+    private Identifier toLowerSnakeCase(final Identifier identifier) {
         final String regex = "([a-z])([A-Z])";
         final String replacement = "$1_$2";
         final String upperSnakeIdentifier = identifier.getText()
                 .replaceAll(regex, replacement)
-                .toUpperCase();
+                .toLowerCase();
         return Identifier.toIdentifier(upperSnakeIdentifier);
     }
 }

@@ -23,8 +23,8 @@ version: 2.2.1
 appVersion: v2.2.1
 
 dependencies:
-  - name: mariadb
-    version: 11.0.13
+  - name: postgresql
+    version: 15.1.0
     repository: https://charts.bitnami.com/bitnami
   - name: grafana
     version: 6.32.11

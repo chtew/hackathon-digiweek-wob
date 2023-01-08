@@ -20,8 +20,6 @@ import de.digiweek.persistence.entity.TrafficRecorderEntity;
 
 @SpringBootTest()
 @Transactional
-@TestPropertySource(properties = {
-        "spring.datasource.url=jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MYSQL" })
 class TrafficRecorderServiceTest {
 
     @Autowired
@@ -37,8 +35,9 @@ class TrafficRecorderServiceTest {
     }
 
     private static String loadFile(String resourceName) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(TrafficRecorderServiceTest.class.getClassLoader().getResourceAsStream(resourceName)));
-        
+        BufferedReader reader = new BufferedReader(new InputStreamReader(
+                TrafficRecorderServiceTest.class.getClassLoader().getResourceAsStream(resourceName)));
+
         StringBuilder stringBuilder = new StringBuilder();
         int lastChar = -1;
         do {

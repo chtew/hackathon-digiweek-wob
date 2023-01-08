@@ -11,5 +11,5 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/opt/local-pv/{{ $fullName }}-mariadb"
+    path: "/opt/local-pv/{{ $fullName }}-postgres"
 {{- end }}
