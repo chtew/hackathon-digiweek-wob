@@ -24,7 +24,7 @@ appVersion: v2.2.1
 
 dependencies:
   - name: postgresql
-    version: 15.1.0
+    version: 12.1.9
     repository: https://charts.bitnami.com/bitnami
   - name: grafana
     version: 6.32.11

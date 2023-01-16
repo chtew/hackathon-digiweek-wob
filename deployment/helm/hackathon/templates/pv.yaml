@@ -1,4 +1,4 @@
-{{- if .Values.mariadb.localstorage -}}
+{{- if .Values.postgresql.localstorage -}}
 {{- $fullName := include "app.fullname" . -}}
 apiVersion: v1
 kind: PersistentVolume
