@@ -1,32 +1,36 @@
-CREATE TABLE `TRAFFICRECORDER`
+CREATE SEQUENCE IF NOT EXISTS "trafficrecorder_id_seq";
+
+CREATE TABLE "trafficrecorder"
 (
-    `EXTERNALID` varchar(255),
-    `CITYDIRECTION` varchar(255),
-    `NEIGHBOR` varchar(255),
-    `SPECIALTY` varchar(255),
-    `LOCATION` varchar(255),
-    `LATITUDE` decimal(22,19),
-    `LONGITUDE` decimal(22,19),
-    `ID` bigint NOT NULL AUTO_INCREMENT,
-    PRIMARY KEY (`ID`)
+    "externalid" VARCHAR(255) DEFAULT NULL,
+    "citydirection" VARCHAR(255) DEFAULT NULL,
+    "neighbor" VARCHAR(255) DEFAULT NULL,
+    "specialty" VARCHAR(255) DEFAULT NULL,
+    "location" VARCHAR(255) DEFAULT NULL,
+    "latitude" DECIMAL(22,19) DEFAULT NULL,
+    "longitude" DECIMAL(22,19) DEFAULT NULL,
+    "id" BIGINT NOT NULL DEFAULT nextval('trafficrecorder_id_seq'),
+    CONSTRAINT "trafficrecorder_pkey" PRIMARY KEY ("id")
 );
 
-CREATE TABLE `TRAFFICRECORD`
+CREATE SEQUENCE IF NOT EXISTS "trafficrecord_id_seq";
+
+CREATE TABLE "trafficrecord"
 (
-    `RECORDDATE` datetime,
-    `WEEKDAY` integer,
-    `WEEKEND` tinyint(1),
-    `HOLIDAY` tinyint(1),
-    `VACATIONLOWERSAXONY` tinyint(1),
-    `PLANTHOLIDAY` tinyint(1),
-    `CARCOUNT` integer,
-    `TRAFFICRECORDER_ID` bigint,
-    `ID` bigint NOT NULL AUTO_INCREMENT,
-    PRIMARY KEY (`ID`)
+    "recorddate" DATE DEFAULT NULL,
+    "weekday" INTEGER DEFAULT NULL,
+    "holiday" BOOLEAN DEFAULT NULL,
+    "vacationlowersaxony" BOOLEAN DEFAULT NULL,
+    "weekend" BOOLEAN DEFAULT NULL,
+    "plantholiday" BOOLEAN DEFAULT NULL,
+    "carcount" INTEGER DEFAULT NULL,
+    "trafficrecorder_id" BIGINT DEFAULT NULL,
+    "id" BIGINT NOT NULL DEFAULT nextval('trafficrecord_id_seq'),
+    CONSTRAINT "trafficrecord_pkey" PRIMARY KEY ("id")
 );
 
-ALTER TABLE `TRAFFICRECORD`
-    ADD CONSTRAINT `FK_TRAFFICRECORD_TRAFFICRECORDER`
-    FOREIGN KEY (`TRAFFICRECORDER_ID`) 
-    REFERENCES `TRAFFICRECORDER` (`ID`);
+ALTER TABLE "trafficrecord"
+    ADD CONSTRAINT "fk_trafficrecord_trafficrecorder"
+    FOREIGN KEY ("trafficrecorder_id")
+    REFERENCES "trafficrecorder" ("id");
 

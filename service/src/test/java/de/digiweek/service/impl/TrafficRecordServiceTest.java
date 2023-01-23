@@ -21,8 +21,6 @@ import de.digiweek.persistence.repository.TrafficRecorderRepository;
 
 @SpringBootTest()
 @Transactional
-@TestPropertySource(properties = {
-        "spring.datasource.url=jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MYSQL" })
 public class TrafficRecordServiceTest {
 
     @Autowired

@@ -27,6 +27,8 @@ SET time_zone = "+00:00";
 -- Table structure for table `flyway_schema_history`
 --
 
+CREATE SEQUENCE IF NOT EXISTS "trafficrecord_id_seq";
+
 CREATE TABLE `flyway_schema_history` (
   `installed_rank` int(11) NOT NULL,
   `version` varchar(50) DEFAULT NULL,
@@ -38,7 +40,7 @@ CREATE TABLE `flyway_schema_history` (
   `installed_on` timestamp NOT NULL DEFAULT current_timestamp(),
   `execution_time` int(11) NOT NULL,
   `success` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+);
 
 --
 -- Dumping data for table `flyway_schema_history`
@@ -54,23 +56,27 @@ INSERT INTO `flyway_schema_history` (`installed_rank`, `version`, `description`,
 -- Table structure for table `TRAFFICRECORD`
 --
 
-CREATE TABLE `TRAFFICRECORD` (
-  `RECORDDATE` datetime DEFAULT NULL,
-  `WEEKDAY` int(11) DEFAULT NULL,
-  `WEEKEND` tinyint(1) DEFAULT NULL,
-  `HOLIDAY` tinyint(1) DEFAULT NULL,
-  `VACATIONLOWERSAXONY` tinyint(1) DEFAULT NULL,
-  `PLANTHOLIDAY` tinyint(1) DEFAULT NULL,
-  `CARCOUNT` int(11) DEFAULT NULL,
-  `TRAFFICRECORDER_ID` bigint(20) DEFAULT NULL,
-  `ID` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE SEQUENCE IF NOT EXISTS "trafficrecord_id_seq";
+
+CREATE TABLE "trafficrecord"
+(
+    "recorddate" DATE DEFAULT NULL,
+    "weekday" INTEGER DEFAULT NULL,
+    "holiday" BOOLEAN DEFAULT NULL,
+    "vacationlowersaxony" BOOLEAN DEFAULT NULL,
+    "weekend" BOOLEAN DEFAULT NULL,
+    "plantholiday" BOOLEAN DEFAULT NULL,
+    "carcount" INTEGER DEFAULT NULL,
+    "trafficrecorder_id" BIGINT DEFAULT NULL,
+    "id" BIGINT NOT NULL DEFAULT nextval('trafficrecord_id_seq'),
+    CONSTRAINT "trafficrecord_pkey" PRIMARY KEY ("id")
+);
 
 --
 -- Dumping data for table `TRAFFICRECORD`
 --
 
-INSERT INTO `TRAFFICRECORD` (`RECORDDATE`, `WEEKDAY`, `WEEKEND`, `HOLIDAY`, `VACATIONLOWERSAXONY`, `PLANTHOLIDAY`, `CARCOUNT`, `TRAFFICRECORDER_ID`, `ID`) VALUES
+INSERT INTO `trafficrecord` (`recorddate`, `weekday`, `weekend`, `holiday`, `vacationlowersaxony`, `plantholiday`, `carcount`, `trafficrecorder_id`, `id`) VALUES
 ('2020-05-01 00:00:00', 2, 1, 1, 1, 1, 38, 1, 4),
 ('2020-05-02 00:00:00', 2, 1, 1, 1, 1, 60, 1, 5),
 ('2020-05-03 00:00:00', 2, 1, 1, 1, 1, 99, 1, 6),
@@ -230,25 +236,28 @@ INSERT INTO `TRAFFICRECORD` (`RECORDDATE`, `WEEKDAY`, `WEEKEND`, `HOLIDAY`, `VAC
 -- --------------------------------------------------------
 
 --
--- Table structure for table `TRAFFICRECORDER`
+-- Table structure for table `trafficrecorder`
 --
 
-CREATE TABLE `TRAFFICRECORDER` (
-  `EXTERNALID` varchar(255) DEFAULT NULL,
-  `CITYDIRECTION` varchar(255) DEFAULT NULL,
-  `NEIGHBOR` varchar(255) DEFAULT NULL,
-  `SPECIALTY` varchar(255) DEFAULT NULL,
-  `LOCATION` varchar(255) DEFAULT NULL,
-  `LATITUDE` decimal(22,19) DEFAULT NULL,
-  `LONGITUDE` decimal(22,19) DEFAULT NULL,
-  `ID` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE SEQUENCE IF NOT EXISTS "trafficrecorder_id_seq";
+
+CREATE TABLE `trafficrecorder` (
+  `externalid` varchar(255) DEFAULT NULL,
+  `citydirection` varchar(255) DEFAULT NULL,
+  `neighbor` varchar(255) DEFAULT NULL,
+  `specialty` varchar(255) DEFAULT NULL,
+  `location` varchar(255) DEFAULT NULL,
+  `latitude` decimal(22,19) DEFAULT NULL,
+  `longitude` decimal(22,19) DEFAULT NULL,
+  "id" BIGINT NOT NULL DEFAULT nextval('trafficrecorder_id_seq'),
+  CONSTRAINT "trafficrecorder_pkey" PRIMARY KEY ("id")
+);
 
 --
 -- Dumping data for table `TRAFFICRECORDER`
 --
 
-INSERT INTO `TRAFFICRECORDER` (`EXTERNALID`, `CITYDIRECTION`, `NEIGHBOR`, `SPECIALTY`, `LOCATION`, `LATITUDE`, `LONGITUDE`, `ID`) VALUES
+INSERT INTO `trafficrecorder` (`externalid`, `citydirection`, `neighbor`, `specialty`, `location`, `latitude`, `longitude`, `id`) VALUES
 ('216_Z2C', 'in', 'neighbor', 'specialty', 'location', '23.32', '50.21', 1),
 ('302_Z1A', 'in', 'neighbor', 'specialty', 'location', '23.32', '50.21', 2),
 ('310_Z2C', 'in', 'neighbor', 'specialty', 'location', '23.32', '50.21', 3),

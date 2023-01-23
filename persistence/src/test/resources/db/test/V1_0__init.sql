@@ -1,32 +1,36 @@
-CREATE TABLE `TRAFFICRECORDER`
+CREATE SEQUENCE IF NOT EXISTS "trafficrecorder_id_seq";
+
+CREATE TABLE "trafficrecorder"
 (
-    `EXTERNALID` varchar(255),
-    `CITYDIRECTION` varchar(255),
-    `NEIGHBOR` varchar(255),
-    `SPECIALTY` varchar(255),
-    `LOCATION` varchar(255),
-    `LATITUDE` decimal(19,2),
-    `LONGITUDE` decimal(19,2),
-    `ID` bigint NOT NULL AUTO_INCREMENT,
-    PRIMARY KEY (`ID`)
+    "externalid" VARCHAR(255),
+    "citydirection" VARCHAR(255),
+    "neighbor" VARCHAR(255),
+    "specialty" VARCHAR(255),
+    "location" VARCHAR(255),
+    "latitude" DECIMAL(19,2),
+    "longitude" DECIMAL(19,2),
+    "id" BIGINT NOT NULL DEFAULT nextval('trafficrecorder_id_seq'),
+    CONSTRAINT "trafficrecorder_pkey" PRIMARY KEY ("id")
 );
 
-CREATE TABLE `TRAFFICRECORD`
+CREATE SEQUENCE IF NOT EXISTS "trafficrecord_id_seq";
+
+CREATE TABLE "trafficrecord"
 (
-    `RECORDDATE` varchar(255),
-    `WEEKDAY` integer,
-    `WEEKEND` varchar(255),
-    `HOLIDAY` varchar(255),
-    `VACATIONLOWERSAXONY` varchar(255),
-    `PLANTHOLIDAY` varchar(255),
-    `CARCOUNT` integer,
-    `TRAFFICRECORDER_ID` bigint,
-    `ID` bigint NOT NULL AUTO_INCREMENT,
-    PRIMARY KEY (`ID`)
+    "recorddate" DATE,
+    "weekday" INTEGER,
+    "holiday" BOOLEAN,
+    "vacationlowersaxony" BOOLEAN,
+    "weekend" BOOLEAN,
+    "plantholiday" BOOLEAN,
+    "carcount" INTEGER,
+    "trafficrecorder_id" BIGINT,
+    "id" BIGINT NOT NULL DEFAULT nextval('trafficrecord_id_seq'),
+    CONSTRAINT "trafficrecord_pkey" PRIMARY KEY ("id")
 );
 
-ALTER TABLE `TRAFFICRECORD`
-    ADD CONSTRAINT `FK_TRAFFICRECORD_TRAFFICRECORDER`
-    FOREIGN KEY (`TRAFFICRECORDER_ID`) 
-    REFERENCES `TRAFFICRECORDER` (`ID`);
+ALTER TABLE "trafficrecord"
+    ADD CONSTRAINT "fk_trafficrecord_trafficrecorder"
+    FOREIGN KEY ("trafficrecorder_id")
+    REFERENCES "trafficrecorder" ("id");
 

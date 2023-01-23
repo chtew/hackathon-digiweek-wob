@@ -1,96 +1,73 @@
 version: "3.9"
 services:
-
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
-    ports:
-      - 8082:80
+  postgres:
+    container_name: hackathon-db
+    image: postgres:latest
     environment:
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
-      MYSQL_DATABASE: hackathon
-    networks:
-      - backend
-
-  grafana:
-    image: grafana/grafana-oss:9.0.2
-    ports:
-      - 3001:3001
-    networks:
-      - backend
-    volumes:
-      - grafana-data:/var/lib/grafana
-    environment:
-      GF_RENDERING_SERVER_URL: http://renderer:8081/render
-      GF_RENDERING_CALLBACK_URL: http://grafana:3001/
-      GF_LOG_FILTERS: rendering:debug
-      GF_SERVER_HTTP_PORT: 3001
-
-  renderer:
-    image: grafana/grafana-image-renderer:latest
-    networks:
-      - backend
-    ports:
-      - 3002:8081
-  db:
-    image: mariadb:latest
-    restart: on-failure
-    environment:
-      MYSQL_DATABASE: 'hackathon'
-      # So you don't have to use root, but you can if you like
-      MYSQL_USER: 'hackathon'
-      # You can use whatever password you like
-      MYSQL_PASSWORD: 'hackathon'
-      # Root password for local debugging
-      MYSQL_ROOT_PASSWORD: 'root'
-      # Password for root access
-      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-    ports:
-      # <Port exposed> : < MySQL Port running inside container>
-      - '3306:3306'
+      POSTGRES_DB: hackathon
+      POSTGRES_USER: hackathon
+      POSTGRES_PASSWORD: hackathon
+      PGDATA: /var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "mysql" ,"-h", "localhost", "-P", "3306", "-u", "root", "-e", "select 1", "hackathon"]
+      test: ['CMD-SHELL', 'pg_isready -U hackathon'] # <<<---
       interval: 5s
       timeout: 60s
       retries: 30
     volumes:
-      - hackathonv2-db-data:/var/lib/mysql
-    networks: # Networks to join (Services on the same network can communicate with each other using their name)
+      - hackathon-db:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    networks:
       - backend
+    restart: unless-stopped
+  
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+       - hackathon-pgadmin:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    networks:
+      - backend
+    restart: unless-stopped
 
-  db-keycloak:
-    image: mariadb:latest
+  hackathon-db-keycloak:
+    image: postgres:latest
     restart: on-failure
     environment:
-      MYSQL_DATABASE: 'keycloak'
-      MYSQL_USER: 'keycloak'
-      MYSQL_PASSWORD: 'keycloak'
-      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-      MYSQL_TCP_PORT: 3307
+      POSTGRES_DB: 'keycloak'
+      POSTGRES_USER: 'keycloak'
+      POSTGRES_PASSWORD: 'keycloak'
+      PGDATA: /var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "mysql" ,"-h", "localhost", "-P", "3307", "-u", "root", "-e", "select 1", "keycloak"]
+      test: ['CMD-SHELL', 'pg_isready -U keycloak'] 
       interval: 5s
       timeout: 60s
       retries: 30
     volumes:
-      - keycloak-db-data:/var/lib/mysql
+      - hackathon-keycloak-db:/var/lib/postgresql/data
     networks:
       - backend
 
-  keycloak:
+  hackathon-keycloak:
     image: jboss/keycloak
     volumes:
       - ./keycloak/imports:/opt/jboss/keycloak/imports
       - ./keycloak/local-test-users.json:/opt/jboss/keycloak/standalone/configuration/keycloak-add-user.json
     depends_on:
-      db-keycloak:
+      hackathon-db-keycloak:
         condition: service_healthy
     restart: on-failure
     environment:
       KEYCLOAK_IMPORT: /opt/jboss/keycloak/imports/realm.json
-      DB_VENDOR: mariadb
-      DB_ADDR: db-keycloak
-      DB_PORT: 3307
+      DB_VENDOR: postgres
+      DB_ADDR: hackathon-db-keycloak
+      DB_PORT: 5432
       DB_USER: 'keycloak'
       DB_PASSWORD: 'keycloak'
       PROXY_ADDRESS_FORWARDING: 'true'
@@ -101,12 +78,11 @@ services:
     networks:
       - backend
 
-# Names our volume
-volumes:
-  hackathonv2-db-data:
-  keycloak-db-data:
-  grafana-data:
-
- # Networks to be created to facilitate communication between containers
 networks:
   backend:
+
+volumes:
+  hackathon-db:
+  hackathon-pgadmin:
+  hackathon-keycloak-db:
+
