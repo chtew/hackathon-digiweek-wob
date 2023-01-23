@@ -8,7 +8,7 @@ replicaCount: 1
 
 image:
   repository: ghcr.io/chtew/hackathon-digiweek-wob
-  tag: "v2.2.1"
+  tag: "v2.2.2-1"
   pullPolicy: Always
 
 imagePullSecrets:
@@ -127,15 +127,12 @@ grafana:
       GF_AUTH_GENERIC_OAUTH_ALLOW_SIGN_UP: 'true'
       GF_AUTH_GENERIC_OAUTH_NAME: 'OAuth'
       GF_AUTH_GENERIC_OAUTH_CLIENT_ID: 'citydashboard'
-      GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH: 'Viewer'
+      GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH: 'Admin'
       GF_AUTH_GENERIC_OAUTH_SCOPES: 'openid profile email'
       GF_AUTH_GENERIC_OAUTH_TOKEN_URL: 'http://anett-xmg-fusion-15-xfu15l19/cityos-auth/realms/citydashboard/protocol/openid-connect/token'
       GF_AUTH_GENERIC_OAUTH_AUTH_URL: 'http://anett-xmg-fusion-15-xfu15l19/cityos-auth/realms/citydashboard/protocol/openid-connect/auth'
       GF_AUTH_GENERIC_OAUTH_API_URL: 'http://anett-xmg-fusion-15-xfu15l19/cityos-auth/realms/citydashboard/protocol/openid-connect/userinfo'
-      GF_AUTH_BASIC_ENABLED: 'false'
+      GF_AUTH_BASIC_ENABLED: 'true'
       GF_SECURITY_ALLOW_EMBEDDING: 'true'
       GF_AUTH_ANONYMOUS_ORG_ROLE: 'Admin'
-      GF_AUTH_ANONYMOUS_ENABLED: 'false'
-
-
-
+      GF_AUTH_ANONYMOUS_ENABLED: 'true'

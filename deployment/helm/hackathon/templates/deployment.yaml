@@ -50,7 +50,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:          
             - name: SPRING_DATASOURCE_URL
-              value: jdbc:postgresql://{{ .Release.Name }}-postgres:{{ .Values.postgresql.primary.service.ports.postgresql }}/{{ .Values.postgresql.auth.database }}?useLegacyDatetimeCode=false&serverTimezone=CET
+              value: jdbc:postgresql://{{ .Release.Name }}-postgresql:{{ .Values.postgresql.primary.service.ports.postgresql }}/{{ .Values.postgresql.auth.database }}?useLegacyDatetimeCode=false&serverTimezone=CET
             - name: SPRING_DATASOURCE_USERNAME
               value: {{ .Values.postgresql.auth.username }}
             - name: SPRING_DATASOURCE_PASSWORD
